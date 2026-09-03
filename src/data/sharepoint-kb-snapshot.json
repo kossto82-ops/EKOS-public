@@ -1,0 +1,250 @@
+{
+  "source": {
+    "driveId": "b!NWFAKE0000drive0000id0000000000000000000000000000",
+    "rootFolderId": "01FAKEROOTFOLDER000000000000000000",
+    "libraryPath": "Brand ES - Northwind ES/Knowledge Base",
+    "crawledAt": "2026-07-17"
+  },
+  "documents": [
+    {
+      "id": "01FAKEDOC000000000000000000000001",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000001",
+      "name": "SOP_KB_Governance.md",
+      "folderPath": "00 - Governance",
+      "topFolder": "00 - Governance",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_es\norigin: domain-knowledge-wiki\nbusiness_area: Governance / KB Maintenance\nowner: '[INFORMATION REQUIRED]'\nstatus: In Review\nsource_url: https://github.com/example-org/knowledge-wiki/governance/kb-governance-sop.md\nsource_type: Governance register\nconfidence_score: Medium\n---\n\n# Knowledge Base Governance SOP\n\nThis standard operating procedure defines how knowledge articles for Northwind Contact Solutions are created, reviewed, and retired. Every article must carry a brand tag, an owner, and a confidence score before it can move from Draft to Published. Articles without an owner are marked `[INFORMATION REQUIRED]` and are excluded from the assistant's grounding set until an owner is assigned.\n\nThe review cadence is quarterly. A reviewer checks each article against the live process in Helios, confirms that carrier names and dial codes still match reality, and either bumps the confidence score or opens a correction task. Corrections are tracked in the knowledge wiki and mirrored back into the SharePoint library on the next crawl.\n\nRetirement is deliberate, not accidental. When a process is replaced, the old article is moved to the `zz - Archived` folder and its status is set to Deprecated, keeping a paper trail rather than deleting history. This protects against silently losing context that a future agent might need.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_es",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Governance / KB Maintenance",
+        "owner": "[INFORMATION REQUIRED]",
+        "status": "In Review",
+        "source_url": "https://github.com/example-org/knowledge-wiki/governance/kb-governance-sop.md",
+        "source_type": "Governance register",
+        "confidence_score": "Medium"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000002",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000002",
+      "name": "Governance_Roles_And_Ownership.md",
+      "folderPath": "00 - Governance",
+      "topFolder": "00 - Governance",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_office\norigin: domain-knowledge-wiki\nbusiness_area: Governance / KB Maintenance\nowner: Governance Council\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/governance/roles-and-ownership.md\nsource_type: Governance register\nconfidence_score: High\n---\n\n# Roles and Ownership\n\nKnowledge ownership at Northwind Contact Solutions is distributed by business area, not by brand. A single owner may be responsible for the same topic across several brands, which keeps process wording consistent. The Governance Council holds final say on conflicts between brand-specific wording and the shared baseline.\n\nEach article names exactly one accountable owner. That owner is expected to respond to correction tasks within five business days. If an owner leaves the company, their articles are reassigned during the next quarterly review, and the confidence score is temporarily lowered to Medium until the new owner re-validates the content.\n\nEditors, distinct from owners, may propose changes through the knowledge wiki. Proposed changes are merged only after the owner approves them, ensuring the assistant never grounds answers on unreviewed edits.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_office",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Governance / KB Maintenance",
+        "owner": "Governance Council",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/governance/roles-and-ownership.md",
+        "source_type": "Governance register",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000003",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000003",
+      "name": "Brand_Overview.md",
+      "folderPath": "02 - Brands",
+      "topFolder": "02 - Brands",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_de\norigin: domain-knowledge-wiki\nbusiness_area: Brand Management\nowner: Brand Management Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/brands/overview.md\nsource_type: Brand register\nconfidence_score: High\n---\n\n# Brand Overview\n\nNorthwind Contact Solutions operates a family of call-answering brands, each aimed at a different market segment. Northwind DE is the flagship general-business brand, Northwind Legal serves law firms with stricter confidentiality handling, and Northwind Italia and Northwind ES cover the Italian and Spanish markets in their local languages.\n\nBrands share one operational platform but differ in greeting scripts, escalation rules, and billing currency. Northwind Bureau and Northwind Office target virtual-office customers who need both call answering and mail handling. Northwind JP, Northwind FR, and Northwind NL round out the international footprint.\n\nThe IT Department (internal_it) is not a customer-facing brand; it owns the shared infrastructure that every brand relies on, including the Helios process system and the routing platform. When a brand-specific answer is not available, the assistant falls back to the Northwind DE baseline wording.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Brand Management",
+        "owner": "Brand Management Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/brands/overview.md",
+        "source_type": "Brand register",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000004",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000004",
+      "name": "Product_Plans_And_Pricing.md",
+      "folderPath": "03 - Products & Services",
+      "topFolder": "03 - Products & Services",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_de\norigin: domain-knowledge-wiki\nbusiness_area: Products & Services\nowner: Product Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/products/plans-and-pricing.md\nsource_type: Product catalogue\nconfidence_score: Medium\n---\n\n# Product Plans and Pricing\n\nNorthwind Contact Solutions offers three standard plans. The Starter plan includes up to 30 answered calls per month, message taking, and email delivery of call notes. The Professional plan raises the included volume to 120 calls, adds appointment booking, and includes SMS notifications. The Enterprise plan is call-volume flexible and adds priority routing and a dedicated agent pool.\n\nAll figures below are fictional demo values. Starter is billed at 19 EUR per month, Professional at 49 EUR per month, and Enterprise starts at 149 EUR per month with per-call overage. Extensions such as an additional local number (9 EUR) or extended 24-hour answering (19 EUR) can be booked on any plan.\n\nPlan changes take effect at the start of the next billing cycle. Downgrades never reduce the current period retroactively; the customer keeps the higher included volume until the cycle rolls over. Currency follows the brand: EUR for Northwind DE, Italia, ES, and FR.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Products & Services",
+        "owner": "Product Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/products/plans-and-pricing.md",
+        "source_type": "Product catalogue",
+        "confidence_score": "Medium"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000005",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000005",
+      "name": "Call_Handling_Operations.md",
+      "folderPath": "04 - Operations",
+      "topFolder": "04 - Operations",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_it\norigin: domain-knowledge-wiki\nbusiness_area: Operations\nowner: Operations Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/operations/call-handling.md\nsource_type: Operations manual\nconfidence_score: High\n---\n\n# Call Handling Operations\n\nWhen a call arrives, the agent sees the customer's greeting script and any special instructions pulled from Helios. The agent answers in the customer's company name, identifies the caller, and captures the reason for the call using the customer's configured form fields. Every call ends with a written call note delivered by the customer's chosen channel.\n\nAgents must confirm the caller's callback number before ending the call. If the caller requests an urgent transfer, the agent checks the customer's reachability rules; when a direct forward is allowed and the target is reachable, the call is transferred, otherwise a message is taken and flagged urgent.\n\nQuality is monitored through periodic call-note reviews. Notes that miss a mandatory field, or that use the wrong company name, are flagged for coaching. Consistent handling across brands is the goal, with Northwind Italia following the same flow in Italian.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_it",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Operations",
+        "owner": "Operations Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/operations/call-handling.md",
+        "source_type": "Operations manual",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000006",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000006",
+      "name": "Customer_Service_Scripts.md",
+      "folderPath": "05 - Customer Service",
+      "topFolder": "05 - Customer Service",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_es\norigin: domain-knowledge-wiki\nbusiness_area: Customer Service\nowner: Customer Service Lead\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/customer-service/scripts.md\nsource_type: Script library\nconfidence_score: High\n---\n\n# Customer Service Scripts\n\nEste documento reune los guiones estandar de atencion al cliente para Northwind ES. El saludo inicial confirma el nombre de la empresa del cliente, ofrece ayuda y solicita el motivo de la llamada. El objetivo es sonar natural y profesional, nunca leer de forma mecanica.\n\nPara reclamaciones, el agente escucha primero, resume el problema para confirmar que lo ha entendido y explica el siguiente paso concreto. Si la incidencia no puede resolverse en la llamada, se registra una nota de llamada marcada como urgente y se comunica al cliente el plazo de respuesta.\n\nLos guiones de cierre agradecen la llamada y confirman el numero de devolucion de llamada. Todas las plantillas estan disponibles tambien en ingles para clientes internacionales, manteniendo el mismo tono y estructura entre idiomas.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_es",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Customer Service",
+        "owner": "Customer Service Lead",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/customer-service/scripts.md",
+        "source_type": "Script library",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000007",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000007",
+      "name": "Helios_CRM_Tool_Guide.md",
+      "folderPath": "06 - Sugar & CMT",
+      "topFolder": "06 - Sugar & CMT",
+      "fileType": "md",
+      "content": "---\nbrand: internal_it\norigin: domain-knowledge-wiki\nbusiness_area: Systems & Tools\nowner: IT Department\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/tools/helios-guide.md\nsource_type: Tool guide\nconfidence_score: High\n---\n\n# Helios CRM and Ticketing Guide\n\nHelios is the internal system that holds customer records, contract details, and support tickets for every Northwind brand. Agents open a customer in Helios to see the active plan, greeting script, and reachability rules before handling a call. The same record links to the customer's billing history and open tickets.\n\nSupport tickets in Helios follow a simple lifecycle: New, In Progress, Waiting on Customer, and Resolved. Each ticket carries the brand, the customer id, and a category so reporting stays consistent across brands. Agents should always attach the related call note to the ticket so context is not lost.\n\nHelios also exposes a lightweight search that matches on customer name, phone number, and contract id. When a caller cannot be found, agents fall back to the phone number the call arrived on, which Helios maps to the owning customer account.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "internal_it",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Systems & Tools",
+        "owner": "IT Department",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/tools/helios-guide.md",
+        "source_type": "Tool guide",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000008",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000008",
+      "name": "Telephony_Carrier_Setup.md",
+      "folderPath": "07 - Telephony",
+      "topFolder": "07 - Telephony",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_de\norigin: domain-knowledge-wiki\nbusiness_area: Telephony\nowner: Telephony Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/telephony/carrier-setup.md\nsource_type: Telephony runbook\nconfidence_score: Medium\n---\n\n# Telephony Carrier Setup\n\nNorthwind provisions local numbers through regional carriers and routes inbound calls to the shared answering platform at api.northwind.internal. For the German market the demo carrier TeleNord supplies number blocks, while the Spanish market uses the demo carrier IberLink. Number provisioning is requested through Helios and confirmed by the Telephony Team.\n\nEach provisioned number is bound to exactly one customer account and one call group. The binding controls which agent skills are eligible to answer. When a customer requests a new number, the Telephony Team reserves it from the carrier block, binds it in the platform, and verifies a test call before handing it over.\n\nPorting an existing number in follows a separate checklist that includes proof of ownership and a scheduled cutover window. Until the port completes, calls continue to arrive on the temporary number so the customer is never unreachable.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Telephony",
+        "owner": "Telephony Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/telephony/carrier-setup.md",
+        "source_type": "Telephony runbook",
+        "confidence_score": "Medium"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000009",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000009",
+      "name": "Billing_And_Invoicing_Policy.md",
+      "folderPath": "08 - Billing & Finance",
+      "topFolder": "08 - Billing & Finance",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_bureau\norigin: domain-knowledge-wiki\nbusiness_area: Billing & Finance\nowner: Finance Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/billing/invoicing-policy.md\nsource_type: Finance policy\nconfidence_score: High\n---\n\n# Billing and Invoicing Policy\n\nInvoices are generated monthly, in arrears, on the first working day of the month. Each invoice combines the plan's base fee with any per-call overage and booked extensions. The invoice currency follows the brand, and VAT is applied according to the customer's country of registration.\n\nCustomers on direct debit are charged automatically a few days after the invoice date. Customers on manual payment receive a payment link and a due window. Failed payments trigger a reminder sequence before any service restriction, and the account owner is notified through Helios at each step.\n\nCredit notes are issued for confirmed billing errors and are always linked to the original invoice for traceability. Disputes are logged as tickets in Helios and routed to the Finance Team, who confirm the correct amount before any adjustment is applied.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_bureau",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Billing & Finance",
+        "owner": "Finance Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/billing/invoicing-policy.md",
+        "source_type": "Finance policy",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000010",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000010",
+      "name": "FAQ_General.md",
+      "folderPath": "11 - FAQs",
+      "topFolder": "11 - FAQs",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_nl\norigin: domain-knowledge-wiki\nbusiness_area: Customer Service\nowner: Customer Service Lead\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/faqs/general.md\nsource_type: FAQ\nconfidence_score: Medium\n---\n\n# General FAQ\n\n**How quickly are my calls answered?** Northwind targets answering within a few rings during business hours. Outside business hours, calls follow your configured after-hours rule, which is usually a message-taking flow or a voicemail box.\n\n**Can I change my greeting?** Yes. Greeting scripts are stored per customer and can be updated by request. The change is applied in Helios and takes effect on the next call. There is no charge for greeting updates.\n\n**What happens if all agents are busy?** Callers enter a short waiting queue. If the wait exceeds your configured limit, the call falls back to your busy rule, which may forward to a colleague, send to voicemail, or take a message. You can review and adjust these rules at any time.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_nl",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Customer Service",
+        "owner": "Customer Service Lead",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/faqs/general.md",
+        "source_type": "FAQ",
+        "confidence_score": "Medium"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000011",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000011",
+      "name": "Corporate_Onboarding_SOP.md",
+      "folderPath": "12 - CORPORATE",
+      "topFolder": "12 - CORPORATE",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_office\norigin: domain-knowledge-wiki\nbusiness_area: HR & Training\nowner: People Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/corporate/onboarding-sop.md\nsource_type: Corporate SOP\nconfidence_score: High\n---\n\n# Corporate Onboarding SOP\n\nNew agents complete a structured onboarding before taking live calls. Week one covers the platform, Helios navigation, and the shared call-handling flow. Trainees shadow experienced agents and take practice calls in a sandbox before any real customer contact.\n\nBrand specialisation follows the shared baseline. An agent assigned to Northwind Legal learns the stricter confidentiality wording, while an agent on Northwind Italia is verified for Italian language skill. Skill assignments are recorded so routing only sends calls an agent is qualified to answer.\n\nOnboarding completion is signed off by a team lead against a checklist. Until sign-off, the trainee is not eligible in the routing pool for live calls. Refresher training is scheduled whenever a shared process changes materially.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_office",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "HR & Training",
+        "owner": "People Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/corporate/onboarding-sop.md",
+        "source_type": "Corporate SOP",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "01FAKEDOC000000000000000000000012",
+      "uri": "file:///b!NWFAKE0000drive0000id0000000000000000000000000000/01FAKEDOC000000000000000000000012",
+      "name": "Brand_Legal_Confidentiality.md",
+      "folderPath": "02 - Brands",
+      "topFolder": "02 - Brands",
+      "fileType": "md",
+      "content": "---\nbrand: northwind_legal\norigin: domain-knowledge-wiki\nbusiness_area: Brand Management\nowner: Brand Management Team\nstatus: Published\nsource_url: https://github.com/example-org/knowledge-wiki/brands/legal-confidentiality.md\nsource_type: Brand register\nconfidence_score: High\n---\n\n# Northwind Legal Confidentiality Rules\n\nNorthwind Legal answers calls for law firms and therefore applies stricter confidentiality handling than the other brands. Agents never disclose whether a specific person is a client, and call notes avoid recording sensitive matter details beyond what the firm has explicitly requested.\n\nCallers asking for case status are told that the firm will return the call, rather than sharing any detail. Messages are delivered only through the firm's approved channel, and urgent matters follow the firm's escalation contact list held in Helios.\n\nAgents assigned to Northwind Legal complete additional confidentiality training and are verified before joining the routing pool. Any suspected confidentiality issue is logged as a high-priority ticket and reviewed by the Brand Management Team the same day.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_legal",
+        "origin": "domain-knowledge-wiki",
+        "business_area": "Brand Management",
+        "owner": "Brand Management Team",
+        "status": "Published",
+        "source_url": "https://github.com/example-org/knowledge-wiki/brands/legal-confidentiality.md",
+        "source_type": "Brand register",
+        "confidence_score": "High"
+      }
+    }
+  ]
+}

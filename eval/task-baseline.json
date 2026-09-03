@@ -1,0 +1,31 @@
+{
+  "config": {
+    "vectorRelativeFloor": 0.95,
+    "minVectorScore": 0.3,
+    "rrfK": 60,
+    "topK": 5,
+    "reranked": false,
+    "querySet": "eval/task-queries.json"
+  },
+  "runs": {
+    "lexical": {
+      "queries": 19,
+      "hitAt1": 0.47368421052631576,
+      "hitAt3": 0.6842105263157895,
+      "hitAt5": 0.6842105263157895,
+      "recallAt5": 0.3640350877192982,
+      "mrr": 0.5438596491228069,
+      "misses": 6
+    },
+    "hybrid": {
+      "queries": 19,
+      "hitAt1": 0.7894736842105263,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "recallAt5": 0.6403508771929826,
+      "mrr": 0.8859649122807018,
+      "misses": 0
+    }
+  },
+  "misses": []
+}

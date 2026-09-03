@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "enterprise-knowledge-hub-dev",
+      "runtimeExecutable": "C:\\EKOS\\node_modules\\.bin\\node.exe",
+      "runtimeArgs": [
+        "node_modules/tsx/dist/cli.mjs",
+        "--require",
+        "./src/server/otel.ts",
+        "server.ts"
+      ],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

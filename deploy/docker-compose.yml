@@ -1,0 +1,304 @@
+# EKOS deployment — single VM, Docker Compose.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Run from this directory:
+#   docker compose up -d --build                        # app + collector
+#   docker compose --profile observability up -d --build # ...plus Prometheus + Alertmanager
+#
+# ---------------------------------------------------------------------------
+# THE CONSTRAINT: one instance. Not a default — a requirement.
+#
+# EKOS stores everything in one SQLite file. SQLite coordinates concurrent access
+# with POSIX advisory locks, which are per-host and do not survive a network
+# filesystem. Two containers on the same volume therefore do not queue behind each
+# other; they interleave writes and corrupt the database, and they do it quietly.
+#
+# So `deploy.replicas` is 1, and scaling this service horizontally is not a
+# configuration change — it is blocked until the PostgreSQL migration on the
+# roadmap lands. Vertical scaling (more CPU/RAM on the VM) is the available knob.
+# ---------------------------------------------------------------------------
+
+name: ekos
+
+services:
+  ekos:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: ${EKOS_IMAGE:-ghcr.io/kossto82-ops/ekos:latest}
+    restart: unless-stopped
+    deploy:
+      replicas: 1 # see the header. Do not raise this.
+      resources:
+        limits:
+          # This is the process actually serving traffic; the ceiling is
+          # deliberately the most generous on this host. Sized for a single-VM
+          # deployment doing synchronous SQLite work and CPU-bound vector scoring
+          # on the main thread (see EkosEventLoopBlocked in alerts.yaml) — raise it
+          # if the corpus grows enough to make that alert routine rather than rare.
+          cpus: "2.00"
+          memory: 1536M
+    ports:
+      - "${EKOS_BIND:-127.0.0.1}:${EKOS_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Where telemetry goes. Unset, the app runs with telemetry entirely off
+      # (src/server/otel.ts) — which is a supported state, not a broken one.
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_SERVICE_NAME: ekos-api
+      # Stamped onto every span, metric and log record as service.version, so
+      # "did the last release do this?" is answerable by filtering rather than by
+      # correlating timestamps against a deploy log.
+      EKOS_VERSION: ${EKOS_VERSION:-dev}
+      # Must match the browser-facing origin or the CORS check rejects the SPA's
+      # own API calls (server.ts).
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3000}
+      # Where this process reads the backup heartbeat the `backup` service stamps
+      # (deploy/backup.cjs) — see the volumes list below for the mount that makes
+      # this path exist, and src/server/metrics.ts for why the gauge lives here
+      # and not on the backup container itself.
+      BACKUP_HEARTBEAT_PATH: /backup-status/.heartbeat
+    env_file:
+      # Provider API keys, ENCRYPTION_SECRET, and the SharePoint Graph credentials.
+      # Deliberately a file mounted at run time and NOT baked into the image — see
+      # .dockerignore. This file must exist; copy ../.env.example and fill it in.
+      - ../.env
+    volumes:
+      # Named volume, not a bind mount. A bind mount from the host arrives owned by
+      # the host's uid, the container runs as uid 1000 (`node`), and the mismatch
+      # surfaces as SQLITE_CANTOPEN at startup. If you need a bind mount for backups,
+      # chown the host directory to 1000:1000 first — see README.md.
+      - ekos-data:/data
+      # Read-only, and mounted under a different path than the backup service's
+      # own /backups — this container has no business reading the backup archives
+      # themselves, only the one small heartbeat file next to them. Same volume,
+      # narrower intent than a second `ekos-backups:/backups:ro` line would signal.
+      - ekos-backups:/backup-status:ro
+    depends_on:
+      - otel-collector
+    # The image already defines a HEALTHCHECK against /healthz. Readiness (/readyz)
+    # is deliberately NOT wired to the container supervisor: it reports 503 when a
+    # dependency is unavailable, and restarting the container does not fix a
+    # dependency — it just drops the requests that were in flight.
+    stop_grace_period: 30s # > the 10s connection drain + 2s telemetry flush in src/server/shutdown.ts
+
+  # ---------------------------------------------------------------------------
+  # The collector is the only thing that knows where telemetry ends up.
+  #
+  # That indirection is the point of choosing OTLP: swapping Grafana Cloud for
+  # Datadog for Azure Monitor is an edit to otel-collector.yaml and a restart of
+  # this one container. EKOS itself never learns which backend it is talking to,
+  # and never needs a vendor SDK.
+  # ---------------------------------------------------------------------------
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.121.0
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          # Sits in the request path of every span/metric/log the app emits, but
+          # does no CPU-bound work of its own beyond batching and forwarding.
+          # 0.75 CPU / 512M is generous headroom without letting a receiver-side
+          # problem (a burst of telemetry, a stuck exporter retrying) compete with
+          # the app for the host's resources.
+          cpus: "0.75"
+          memory: 512M
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./otel-collector.yaml:/etc/otel/config.yaml:ro
+    environment:
+      # Consumed by otel-collector.yaml's exporter section. Left empty by default,
+      # in which case telemetry is received and dropped — see the WARNING at the top
+      # of that file.
+      OTLP_BACKEND_ENDPOINT: ${OTLP_BACKEND_ENDPOINT:-}
+      OTLP_BACKEND_HEADERS: ${OTLP_BACKEND_HEADERS:-}
+    expose:
+      - "4317" # OTLP/gRPC
+      - "4318" # OTLP/HTTP — what the app uses
+      - "8888" # the collector's own internal metrics
+      - "8889" # Prometheus scrape endpoint for application metrics
+      - "13133" # health_check extension
+    # Not published to the host by default. An OTLP receiver accepts arbitrary
+    # telemetry from anyone who can reach it; there is no authentication on these
+    # ports. Reaching them from outside the compose network should be a deliberate
+    # act, not the default.
+
+  # ---------------------------------------------------------------------------
+  # Optional local backend — `--profile observability`.
+  #
+  # This exists so the alert rules in alerts.yaml are executable rather than
+  # decorative, and so a VM deployment has *somewhere* for numbers to land on day
+  # one. It is metrics only: traces and logs need a store (Tempo/Loki, or a
+  # vendor), which is the choice this compose file deliberately does not make for
+  # you. Point OTLP_BACKEND_ENDPOINT at your real backend and you can drop this
+  # profile entirely.
+  #
+  # Prometheus retention here is 15 days on a local volume. That is a single-node
+  # store on the same VM as the app — fine for "what happened last week", not a
+  # substitute for a managed backend, and useless for diagnosing the VM itself
+  # being down.
+  # ---------------------------------------------------------------------------
+  prometheus:
+    profiles: ["observability"]
+    image: prom/prometheus:v3.1.0
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          # TSDB memory use scales with active series and the 15d retention set
+          # below; 1G is comfortable for one app's worth of series on a single VM
+          # and is the kind of thing that needs raising, loudly, before it needs
+          # raising quietly by an OOM kill.
+          cpus: "1.00"
+          memory: 1024M
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts.yaml:/etc/prometheus/alerts.yaml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "${PROM_BIND:-127.0.0.1}:9090:9090"
+    depends_on:
+      - otel-collector
+
+  alertmanager:
+    profiles: ["observability"]
+    image: prom/alertmanager:v0.28.0
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          # Holds grouped alert state, not a time series database — this ceiling
+          # is deliberately the smallest of the observability profile's services.
+          cpus: "0.25"
+          memory: 256M
+    # Only flags Alertmanager actually has. It used to carry
+    # `--config.expand-env`, which is a Prometheus-family flag that Alertmanager
+    # does not implement — kingpin rejects an unknown flag and exits immediately,
+    # so this container "Started" and was dead before it could bind :9093. It
+    # restarted forever and the CI readiness check got connection-refused with no
+    # explanation, because a profile service is invisible to a `docker compose
+    # logs` that omits its profile.
+    #
+    # Keeping a real webhook URL out of the tracked config is done with
+    # `url_file`, which Alertmanager does support — see alertmanager.yml.
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    ports:
+      - "${ALERTMANAGER_BIND:-127.0.0.1}:9093:9093"
+    depends_on:
+      - alert-sink
+
+  # ---------------------------------------------------------------------------
+  # Default destination for the alerts above. Logs what it receives; notifies no
+  # one. See the header of alertmanager.yml — this exists so the delivery path
+  # from a firing rule to something inspectable is exercised by default, instead
+  # of the null receiver this used to route to. Inspect with:
+  #   docker compose --profile observability logs -f alert-sink
+  # ---------------------------------------------------------------------------
+  alert-sink:
+    profiles: ["observability"]
+    image: node:22-bookworm-slim
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          # A single-file http.createServer that logs and discards. This ceiling
+          # exists so a bug here (or an open port receiving unexpected traffic —
+          # see alert-sink.js) cannot become a resource problem for anything else,
+          # not because this service is expected to ever approach it.
+          cpus: "0.25"
+          memory: 128M
+    volumes:
+      - ./alert-sink.js:/alert-sink.js:ro
+    command: ["node", "/alert-sink.js"]
+    ports:
+      - "${ALERT_SINK_BIND:-127.0.0.1}:9094:9094"
+
+  # ---------------------------------------------------------------------------
+  # Scheduled backup — see deploy/backup.cjs for what this does and, just as
+  # importantly, what it does not do without BACKUP_OFFHOST_URL configured.
+  #
+  # Not gated behind a profile: unlike metrics/alerting, this protects the one
+  # copy of the corpus that exists (see "Why one instance" above), so it runs by
+  # default with plain `docker compose up`.
+  #
+  # Uses the ekos image itself, not a separate one: it already carries a
+  # better-sqlite3 build compiled against the exact Node ABI the database was
+  # written with, and a second toolchain here is a second thing that can drift
+  # from it.
+  # ---------------------------------------------------------------------------
+  backup:
+    image: ${EKOS_IMAGE:-ghcr.io/kossto82-ops/ekos:latest}
+    restart: unless-stopped
+    # Runs from /app, NOT /deploy, and the path is the whole point. Node resolves
+    # `require('better-sqlite3')` by walking up from the FILE's own directory —
+    # never from the working directory — so a script at /deploy/ looks in
+    # /deploy/node_modules and /node_modules, finds neither, and exits before it
+    # does anything. The image carries its dependencies at /app/node_modules
+    # (Dockerfile WORKDIR), so the script has to live under /app to see them.
+    #
+    # And `.cjs`, not `.js`, for the second half of the same problem: /app has a
+    # package.json declaring "type": "module", so a .js file there is parsed as an
+    # ES module and `require` is not defined in it at all. Moving the script to
+    # /app fixed resolution and broke parsing; the extension is what fixes both.
+    #
+    # Each mistake cost a restart loop that read as a backup problem and was
+    # neither: the container died on line 46, `restart: unless-stopped` brought it
+    # back, and the CI compose test timed out waiting for a snapshot from a
+    # process that never reached its first line of work.
+    command: ["node", "/app/backup.cjs"]
+    environment:
+      DATABASE_PATH: /data/ekos.sqlite
+      BACKUP_DIR: /backups
+      BACKUP_INTERVAL_SECONDS: ${BACKUP_INTERVAL_SECONDS:-21600}
+      BACKUP_RETENTION_COUNT: ${BACKUP_RETENTION_COUNT:-28}
+      # Off-host destination. Empty by default — see deploy/backup.cjs and
+      # deploy/README.md before assuming this closes the off-host requirement.
+      # Never put a real value here; set it in .env.
+      BACKUP_OFFHOST_URL: ${BACKUP_OFFHOST_URL:-}
+    # This process wakes up every few hours and copies plus gzips the entire
+    # corpus on the same host and disk as the app serving live traffic. Uncapped,
+    # a backup cycle can starve the database it exists to protect — this was the
+    # first service on this host to get a ceiling; every other service below now
+    # has one too, for the same one-host reason.
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M
+    volumes:
+      # NOT mounted :ro, and it cannot be. The database runs in WAL mode
+      # (journal_mode = WAL, src/db/db.ts), and SQLite cannot open a WAL database
+      # for reading without write access to its `-shm` wal-index — or to the
+      # directory, when that file does not yet exist. A `:ro` mount here reads
+      # like the safer choice and instead fails every cycle with SQLITE_CANTOPEN.
+      #
+      # The guard against this container writing the database is the connection
+      # itself: backup.cjs opens it with `{ readonly: true }`, so SQLite refuses
+      # writes at the statement level. That is the check that actually holds.
+      - ekos-data:/data
+      - ekos-backups:/backups
+      # Mounted next to the image's node_modules — see the `command` above.
+      - ./backup.cjs:/app/backup.cjs:ro
+    depends_on:
+      - ekos
+
+volumes:
+  # The database. Everything EKOS knows lives here; see README.md for how to back
+  # it up without copying a half-written WAL.
+  ekos-data:
+  # Scheduled backups (the `backup` service above). A SEPARATE volume, but on this
+  # SAME HOST — not an off-host backup by itself. See deploy/backup.cjs.
+  ekos-backups:
+  prometheus-data:
+  alertmanager-data:

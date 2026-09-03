@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Micro type scale, below Tailwind's `text-xs` (12px).
+
+     245 arbitrary `text-[Npx]` values had accumulated across five sizes, so the
+     same label role was 9px on one screen and 10px on another with nothing
+     recording which was intended. These are the four steps that were actually in
+     use, named so the choice is visible and a fifth cannot be invented in
+     passing.
+
+     Four, not the two or three the design review asked for, and the reason is
+     load-bearing: 5xs and 4xs are Badge's solid and outline weights, a
+     distinction made deliberately when that component was consolidated.
+     Collapsing them would undo it. The single 7px use folded into 5xs.
+
+     No paired `--text-*--line-height` on purpose. The app inherits a unitless
+     1.5 ratio, so line-height already scales with font-size — an 8px label
+     computes 12px on its own. Pinning a length here would freeze it instead. */
+  --text-2xs: 11px;
+  --text-3xs: 10px;
+  --text-4xs: 9px;
+  --text-5xs: 8px;
+
+  /* Radius: deliberately sharp — precision over friendliness. See docs/branding. */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+
+  /* EKOS brand accent — the "active layer" indigo from the logo mark.
+     Named `brand` (not `indigo`) so a future re-hue only touches this block.
+     Full ramp defined (not just the shades in active use) so every existing
+     `indigo-*` utility across the app can be renamed 1:1 without dropping
+     an undefined shade. Values are the stock Tailwind indigo ramp — this is
+     a rename of the token, not a restyle. */
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+  --color-brand-950: #1e1b4b;
+
+  /* Semantic colors — meaning, not decoration. Never reuse for the accent.
+     Full ramps for the same reason as `brand` above (stock Tailwind
+     emerald/rose/amber values, renamed not restyled). */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+  --color-success-950: #022c22;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+  --color-warning-950: #451a03;
+
+  --color-danger-50: #fff1f2;
+  --color-danger-100: #ffe4e6;
+  --color-danger-200: #fecdd3;
+  --color-danger-300: #fda4af;
+  --color-danger-400: #fb7185;
+  --color-danger-500: #f43f5e;
+  --color-danger-600: #e11d48;
+  --color-danger-700: #be123c;
+  --color-danger-800: #9f1239;
+  --color-danger-900: #881337;
+  --color-danger-950: #4c0519;
+
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+
+  /* Elevation — cool-neutral, low-opacity shadows (slate-900 tint, not pure
+     black) paired with the existing sharp radii. Overriding Tailwind's shadow
+     scale here means every `shadow-*` utility already in use across the app
+     picks these up automatically — no class renames required. */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 20px -4px rgba(15, 23, 42, 0.1), 0 4px 8px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 20px 32px -8px rgba(15, 23, 42, 0.14), 0 8px 12px -6px rgba(15, 23, 42, 0.06);
+  --shadow-2xl: 0 28px 48px -12px rgba(15, 23, 42, 0.22);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.4);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

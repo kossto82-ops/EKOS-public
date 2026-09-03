@@ -1,0 +1,39 @@
+{
+  "origin": "manual-upload",
+  "note": "Synthetic demo documents uploaded through the knowledge base UI, NOT a crawled source. There is deliberately no kb_sources entry for these: they are attributed to the uploading user. Source material: the fictional Helios User Manual, split by section so each screen competes for its own grounding slot.",
+  "uploadedAt": "2026-07-20",
+  "documents": [
+    {
+      "id": "up_helios_login",
+      "name": "Helios — Logging in and navigation",
+      "fileType": "md",
+      "category": "Systems & Tools",
+      "department": "Systems & Tools",
+      "content": "# Helios — Logging in and navigation\n\nHelios is the internal customer-management tool (CMT) agents use to look up customers, open tickets and record call notes.\n\n## Sign in\n1. Open `https://helios.northwind.internal`.\n2. Sign in with your Northwind single sign-on account.\n3. The landing screen shows your open tickets and today's callbacks.\n\n## Main areas\n- **Customers** — search by name, number or customer id.\n- **Tickets** — the work queue; each ticket links to the customer and the call.\n- **Call notes** — the note template used while a call is live.\n"
+    },
+    {
+      "id": "up_helios_ticket",
+      "name": "Helios — Creating and closing a ticket",
+      "fileType": "md",
+      "category": "Systems & Tools",
+      "department": "Customer Service",
+      "content": "# Helios — Creating and closing a ticket\n\n## Create a ticket\n1. Open the customer in Helios.\n2. Click **New ticket**, choose the category (billing, technical, cancellation…).\n3. Write a short summary and set the priority.\n\n## Close a ticket\n1. Record the outcome in the call note.\n2. Set the ticket status to **Resolved**.\n3. If a follow-up call is needed, schedule a callback instead of resolving.\n"
+    },
+    {
+      "id": "up_billing_invoicing",
+      "name": "Billing — Reading a customer invoice",
+      "fileType": "md",
+      "category": "Billing & Finance",
+      "department": "Billing & Finance",
+      "content": "# Billing — Reading a customer invoice\n\nNorthwind invoices show a monthly base fee per booked service plus per-minute call handling.\n\n- **Base fee** — the plan the customer booked (billed monthly in advance).\n- **Usage** — answered call minutes in the period.\n- **VAT** — applied at the statutory rate of the customer's country.\n\nWhen a customer disputes a charge, open the invoice in Helios and compare the usage lines against the call log before escalating to Billing.\n"
+    },
+    {
+      "id": "up_cancellation_policy",
+      "name": "Operations — Cancellation and notice periods",
+      "fileType": "md",
+      "category": "Operations",
+      "department": "Operations",
+      "content": "# Operations — Cancellation and notice periods\n\nContracts run monthly and can be cancelled to the end of the current term with the notice period stated in the customer's plan.\n\n1. Confirm the customer's identity in Helios.\n2. Open the contract and select **Request cancellation**.\n3. Record the reason and the effective date.\n4. Send the confirmation email from the Customer Service template.\n\nDo not delete the customer record — cancellation only ends the active service.\n"
+    }
+  ]
+}

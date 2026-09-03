@@ -1,0 +1,347 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  quality-gate:
+    name: Lint, test, and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          # Matches the NODE_VERSION the Dockerfile builds against. These have to
+          # agree: better-sqlite3 is a native addon compiled against a specific V8
+          # ABI, so a gate that passes on one Node major proves nothing about an
+          # image built on another. Change both or neither.
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check (tsc --noEmit)
+        run: npm run lint
+
+      - name: Test (vitest, includes accessibility regression suite)
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # tests/deployment.test.ts asserts that alerts.yaml parses and that the
+      # rules it expects are present, but "valid YAML containing the right keys"
+      # is not the same as "Prometheus will load this". A malformed PromQL
+      # expression or an unknown field parses fine as YAML and is only rejected
+      # at rule-load time, in a deployment, silently leaving the rule inert.
+      # promtool is the only thing that actually answers that question, and it
+      # needs no cluster.
+      - name: Validate alert rules (promtool)
+        run: |
+          set -euo pipefail
+          VERSION=2.54.1
+          curl -sSL -o /tmp/prom.tar.gz \
+            "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz"
+          tar -xzf /tmp/prom.tar.gz -C /tmp
+          /tmp/prometheus-${VERSION}.linux-amd64/promtool check rules deploy/alerts.yaml
+
+  # ---------------------------------------------------------------------------
+  # The image.
+  #
+  # Before this, CI ended at `npm run build` — it proved the code compiled and
+  # then produced nothing anyone could deploy. Every deployment artifact was
+  # whatever a person happened to build on their own machine, against their own
+  # Node, with their own node_modules. This job makes the artifact a product of the
+  # commit instead.
+  #
+  # Runs on every push and PR so a broken Dockerfile fails at review time rather
+  # than at deploy time, but only *pushes* from the default branch — a PR from a
+  # fork must never be able to publish under this repository's name.
+  #
+  # Build and publish are two steps, not one, because they have different
+  # audiences. The build loads the image into the local daemon on every run so
+  # the smoke test below has something to start; buildx's docker-container
+  # driver keeps its output in the build cache otherwise, and `docker run` would
+  # fail on every PR — the exact runs this job exists for. Publishing is a
+  # second pass that hits the cache and re-exports the same layers to GHCR.
+  # ---------------------------------------------------------------------------
+  image:
+    name: Build and publish container image
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    permissions:
+      contents: read
+      packages: write
+    env:
+      # Resolved against the repository's actual default branch rather than a
+      # hardcoded 'main'. This workflow also triggers on master (see `on:`), and
+      # a literal ref comparison silently failed there.
+      PUBLISH: ${{ github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          # `sha-<commit>` is the tag deployments should pin. `latest` exists for
+          # convenience and is a moving target — a compose file pinned to it cannot
+          # answer "what is actually running", which is the first question in an
+          # incident. deploy/docker-compose.yml takes EKOS_IMAGE for this reason.
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long
+
+      # metadata-action's `tags` output is newline-separated when more than one
+      # tag applies (both do on the default branch: latest + sha-). Resolved once
+      # here into a single tag, rather than re-deriving `head -n1` at each of the
+      # three later steps that need exactly one image reference.
+      - name: Resolve a single image tag for the steps below
+        id: image
+        run: echo "ref=$(echo '${{ steps.meta.outputs.tags }}' | head -n1)" >> "$GITHUB_OUTPUT"
+
+      - name: Build image into the local daemon
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          # load, not push. Every run needs the image startable by the smoke
+          # test below; only the default branch needs it published, which the
+          # separate step after the smoke test handles.
+          load: true
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Stamped into the image and reported as service.version on every span,
+          # metric and log record (src/server/otel.ts), so telemetry can be filtered
+          # by release without correlating against a deploy log.
+          build-args: |
+            EKOS_VERSION=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # A built image that has never been started is not a verified image. This
+      # catches the failures a `docker build` cannot: a missing runtime file, a
+      # migrations directory that did not get copied, a CMD that is wrong, a
+      # permission error from running as non-root against /data.
+      - name: Smoke-test the image
+        run: |
+          set -euo pipefail
+          IMAGE="${{ steps.image.outputs.ref }}"
+          # ENCRYPTION_SECRET is mandatory in production — src/server/crypto.ts
+          # refuses to start without it rather than fall back to the well-known
+          # development key. A throwaway value is correct here and only here: this
+          # container is destroyed at the end of the step and stores no keys.
+          docker run -d --name ekos-smoke \
+            -e ALLOWED_ORIGIN=http://localhost:3000 \
+            -e ENCRYPTION_SECRET=ci-smoke-test-only-not-a-real-secret \
+            -p 3000:3000 "$IMAGE"
+
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/healthz >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+
+          echo "--- /healthz ---"
+          curl -fsS http://127.0.0.1:3000/healthz
+
+          # Readiness is asserted separately and NOT with -f: a fresh container has
+          # no vectors and no Graph credentials, so /readyz legitimately answers 200
+          # with status "degraded". What must hold is that the *required* checks —
+          # database and migrations — passed, which is what distinguishes "started
+          # correctly with an empty index" from "started against a broken schema".
+          echo "--- /readyz ---"
+          READY=$(curl -sS http://127.0.0.1:3000/readyz)
+          echo "$READY"
+          echo "$READY" | grep -q '"name":"database","ok":true'
+          echo "$READY" | grep -q '"name":"migrations","ok":true'
+
+          # The shutdown path, which is the thing no unit test can reach: SIGTERM
+          # must drain connections and close SQLite cleanly (src/server/shutdown.ts)
+          # rather than time out and get SIGKILLed. `docker stop` waits 10s by
+          # default; if tini and the signal handlers are wired correctly this
+          # returns in well under that.
+          echo "--- graceful shutdown ---"
+          START=$(date +%s)
+          docker stop ekos-smoke >/dev/null
+          ELAPSED=$(( $(date +%s) - START ))
+          echo "stopped in ${ELAPSED}s"
+          docker logs ekos-smoke 2>&1 | grep -q "Shutdown complete"
+          test "$ELAPSED" -lt 10
+
+      # ---------------------------------------------------------------------------
+      # Everything below the plain `docker run` smoke test above and up to
+      # publish. Before this, `backup`, `alert-sink`, `alertmanager` and
+      # `prometheus`, the named volumes, container-to-container DNS, and
+      # `alertmanager`'s own command line had never been exercised
+      # anywhere — the smoke test only ever ran `docker run` against the bare
+      # `ekos` image, never `docker compose`. This brings up the real stack this
+      # image is meant to run in and checks the two things that fail silently in
+      # production: a backup that stops happening, and a backup nobody has ever
+      # tried to restore.
+      #
+      # Kept bounded: a 15s BACKUP_INTERVAL_SECONDS means the first cycle (which
+      # also runs at startup — see deploy/backup.cjs) lands within seconds, and the
+      # whole step has a 6-minute ceiling so a hung `docker compose up` cannot turn
+      # this into the ten-minute job the brief warned against.
+      # ---------------------------------------------------------------------------
+      - name: Compose stack integration test (backup heartbeat, restore, alerting)
+        timeout-minutes: 6
+        run: |
+          set -euo pipefail
+          IMAGE="${{ steps.image.outputs.ref }}"
+
+          # A throwaway secret for a container this step destroys at the end.
+          # ENCRYPTION_SECRET is mandatory in production (src/server/crypto.ts);
+          # env_file requires the file to exist at all (deploy/docker-compose.yml).
+          cat > .env <<'EOF'
+          ENCRYPTION_SECRET=ci-compose-test-only-not-a-real-secret
+          ALLOWED_ORIGIN=http://localhost:3000
+          EOF
+
+          export EKOS_IMAGE="$IMAGE"
+          export BACKUP_INTERVAL_SECONDS=15
+          export BACKUP_RETENTION_COUNT=3
+
+          cd deploy
+          # --profile observability brings up prometheus, alertmanager and
+          # alert-sink too; ekos, otel-collector and backup run unconditionally.
+          docker compose --profile observability up -d
+
+          echo "--- waiting for ekos /healthz ---"
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/healthz >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:3000/healthz
+
+          echo "--- waiting for the backup service to produce a verified, gzipped snapshot ---"
+          FOUND=""
+          for i in $(seq 1 30); do
+            if docker compose exec -T backup sh -c 'ls /backups/*.sqlite.gz >/dev/null 2>&1'; then
+              FOUND=1
+              break
+            fi
+            sleep 3
+          done
+          test -n "$FOUND"
+          docker compose exec -T backup sh -c 'ls -la /backups'
+
+          echo "--- backup heartbeat exists (this is what EkosBackupStale watches) ---"
+          docker compose exec -T backup sh -c 'test -f /backups/.heartbeat'
+          docker compose exec -T backup sh -c 'cat /backups/.heartbeat'
+
+          echo "--- restore: the gzipped backup decompresses and opens, and has the expected tables ---"
+          docker compose exec -T backup sh -c '
+            set -e
+            f=$(ls -t /backups/*.sqlite.gz | head -n1)
+            gunzip -c "$f" > /tmp/restore-test.sqlite
+            node -e "
+              const D = require(\"better-sqlite3\");
+              const db = new D(\"/tmp/restore-test.sqlite\", { readonly: true });
+              const tables = db.prepare(\"select name from sqlite_master where type = ?\").pluck().all(\"table\");
+              console.log(\"restored tables:\", tables.join(\", \"));
+              if (!tables.includes(\"kb_documents\")) { throw new Error(\"restored database is missing kb_documents\"); }
+              db.close();
+            "
+          '
+
+          echo "--- alertmanager reports ready (never started under docker compose before this job) ---"
+          READY=""
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:9093/-/ready >/dev/null 2>&1; then READY=1; break; fi
+            sleep 2
+          done
+          # Say WHY, in the step that knows. A bare `curl` exiting 7 reports
+          # "couldn't connect" and nothing about the container that should have
+          # been listening — and the failure-log step below cannot help, because a
+          # profile service is invisible to a compose command without its profile.
+          if [ -z "$READY" ]; then
+            echo "alertmanager never became ready on 127.0.0.1:9093 — its own logs and state follow:"
+            docker compose --profile observability ps alertmanager || true
+            docker compose --profile observability logs alertmanager || true
+            exit 1
+          fi
+          curl -fsS http://127.0.0.1:9093/-/ready
+
+          echo "--- alert-sink logged its startup line ---"
+          docker compose --profile observability logs alert-sink 2>&1 | grep -qi "listening on"
+
+          docker compose --profile observability logs
+          docker compose --profile observability down -v
+
+      # WITH the profile. Without it, compose does not know prometheus,
+      # alertmanager or alert-sink exist, so this printed the three unprofiled
+      # services and silently omitted the ones the test above actually asserts —
+      # the run that failed on alertmanager readiness produced no alertmanager
+      # logs at all, and `down -v` left its containers and volumes behind.
+      - name: Compose stack logs on failure
+        if: failure()
+        run: |
+          cd deploy
+          docker compose --profile observability ps -a || true
+          docker compose --profile observability logs || true
+          docker compose --profile observability down -v || true
+
+      # BLOCKS publish, deliberately, rather than only reporting: an unscanned
+      # image on GHCR is something a human might deploy under a sha- tag, the same
+      # argument the smoke test above already makes for "must start" — "must not
+      # carry a known exploitable CVE" belongs in the same gate, not a dashboard
+      # nobody is required to look at before pulling the image.
+      #
+      # `ignore-unfixed: true` is the one thing that keeps this practical: the
+      # Debian slim base image accrues OS-level High/Critical CVEs with no
+      # available fix on a normal cadence, and failing every release on those
+      # would either block real work indefinitely or get this step silenced with
+      # `continue-on-error` the first time it happened — which is a worse outcome
+      # than not scanning at all, per "a gate that cannot fail is not a gate," and
+      # its inverse: a gate everyone routes around isn't one either. What remains
+      # after that filter — CRITICAL/HIGH findings with a fix this repository's own
+      # dependency tree or base image update could actually apply — is what
+      # blocks.
+      # Pinned WITH the leading `v`. It was `@0.28.0`, and that unprefixed tag no
+      # longer resolves — the action now publishes immutable `vX.Y.Z` tags only,
+      # so every run died here in 3s with "unable to find version", taking the
+      # whole image job with it before a single step ran.
+      - name: Scan the image for vulnerabilities (Trivy)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ steps.image.outputs.ref }}
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+
+      # Publishing happens after the smoke test, not before it, so an image that
+      # cannot start never reaches GHCR under a sha- tag someone might deploy.
+      # Every layer is already in the cache from the build step above, so this
+      # re-exports rather than rebuilds.
+      - name: Publish image to GHCR
+        if: env.PUBLISH == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            EKOS_VERSION=${{ github.sha }}
+          cache-from: type=gha
+
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs ekos-smoke || true

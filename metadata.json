@@ -1,0 +1,6 @@
+{
+  "name": "EKOS — Enterprise Knowledge Operating System",
+  "description": "EKOS is the operating system for governed enterprise knowledge — multi-brand ingestion, role-based access control, AI-assisted retrieval, and compliance in one platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

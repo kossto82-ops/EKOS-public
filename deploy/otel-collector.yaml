@@ -1,0 +1,154 @@
+# OpenTelemetry Collector — the seam between EKOS and whatever stores its telemetry.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# ===========================================================================
+# WARNING — READ THIS BEFORE ASSUMING YOU HAVE OBSERVABILITY
+#
+# Out of the box, with OTLP_BACKEND_ENDPOINT unset, this collector receives
+# everything and stores none of it. Metrics are exposed for Prometheus to scrape
+# (and the `observability` profile in docker-compose.yml runs one). Traces and logs
+# go to the `debug` exporter, which writes a summary to the collector's own stdout
+# and then drops them.
+#
+# That is a deliberate default — this file cannot guess your backend, and silently
+# shipping telemetry to some vendor would be worse. But it means the state you are
+# in until you edit this file is: traces and logs are not retained anywhere.
+# Set OTLP_BACKEND_ENDPOINT, or replace the `otlphttp/backend` exporter below.
+# ===========================================================================
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        # 0.0.0.0 within the compose network only; these ports are not published to
+        # the host (see docker-compose.yml). There is no authentication on an OTLP
+        # receiver — anyone who can reach it can write telemetry into your backend.
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  # First in every pipeline, on purpose. A collector that OOMs during a traffic
+  # spike takes its telemetry down at exactly the moment the telemetry matters; this
+  # sheds load instead, and says so in its own logs.
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 15
+
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+    send_batch_max_size: 1024
+
+  # Belt and braces for the redaction already done in src/server/logger.ts.
+  #
+  # That redaction covers the fields we know carry secrets, applied before pino
+  # serializes — so it is the real control. This is the backstop for the case that
+  # control is designed against: a future `logger.info({ body })` added during
+  # debugging, shipping a live provider key to a third-party backend. Dropping the
+  # attribute here costs nothing and does not depend on remembering.
+  attributes/scrub:
+    actions:
+      - key: apiKey
+        action: delete
+      - key: aiConfig.apiKey
+        action: delete
+      - key: http.request.header.authorization
+        action: delete
+      - key: http.request.header.x-api-key
+        action: delete
+
+exporters:
+  # --- The swap point -------------------------------------------------------
+  #
+  # Any OTLP-speaking backend drops in here unchanged — Grafana Cloud, Honeycomb,
+  # Datadog's OTLP intake, an Azure Monitor exporter, a second collector. A vendor
+  # that does not speak OTLP needs its own exporter binary, which is why
+  # docker-compose.yml pins the -contrib image and not the core one.
+  #
+  # TO ENABLE: uncomment this block AND the `otlphttp/backend` lines in the three
+  # pipelines at the bottom, then set in the compose environment:
+  #
+  #   OTLP_BACKEND_ENDPOINT=https://otlp.example.com
+  #   OTLP_BACKEND_HEADERS="authorization=Bearer xxx"
+  #
+  # It ships commented rather than active-but-empty because the collector rejects
+  # both an exporter with a blank endpoint and an exporter that no pipeline uses —
+  # either way it refuses to start, which would make "no backend chosen yet" break
+  # the app's telemetry entirely instead of degrading it.
+  #
+  # otlphttp/backend:
+  #   endpoint: ${env:OTLP_BACKEND_ENDPOINT}
+  #   headers_string: ${env:OTLP_BACKEND_HEADERS}
+  #   retry_on_failure:
+  #     enabled: true
+  #     initial_interval: 5s
+  #     max_interval: 30s
+  #     # Bounded: a backend that has been down for five minutes is an incident to
+  #     # be noticed, not a queue to grow until the collector OOMs.
+  #     max_elapsed_time: 300s
+  #   sending_queue:
+  #     enabled: true
+  #     queue_size: 1000
+
+  # Metrics, in Prometheus scrape format on :8889. This is what makes alerts.yaml
+  # executable without any vendor at all.
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    # Names become the dotted instrument name with dots replaced by underscores and
+    # nothing else appended — `ekos.retrieval.empty` -> `ekos_retrieval_empty`, not
+    # `ekos_retrieval_empty_total`. Suffixes are disabled deliberately so the rules
+    # in alerts.yaml can be written against names that are derivable from
+    # src/server/metrics.ts rather than from this exporter's naming rules.
+    add_metric_suffixes: false
+    resource_to_telemetry_conversion:
+      # Puts service.name / service.version on every series, so an alert can say
+      # which release regressed.
+      enabled: true
+
+  # Traces and logs land here when no backend is configured. `basic` prints one
+  # summary line per batch: enough to confirm data is arriving, far too little to
+  # diagnose anything. Do not mistake this for a destination.
+  debug:
+    verbosity: basic
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      # The collector's own metrics. Bound to 0.0.0.0 rather than the default
+      # localhost, because "localhost" inside this container is not reachable from
+      # the Prometheus container — and a collector that is silently dropping batches
+      # makes every other series incomplete without anything saying so.
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/scrub, batch]
+      # Add `otlphttp/backend` here once a backend is configured, and drop `debug`
+      # once you have confirmed data is arriving. Until then: traces are counted and
+      # discarded.
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      # The only pipeline with a real destination by default.
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/scrub, batch]
+      # As with traces: discarded until a backend is added here.
+      exporters: [debug]

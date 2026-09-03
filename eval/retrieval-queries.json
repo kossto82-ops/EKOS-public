@@ -1,0 +1,627 @@
+[
+  {
+    "id": "syn_sp_01AKSN5MJA45KW3PHOOFDJX2ASAWYV6NUU_0",
+    "query": "What tax rate is applied to invoices for customers located in a specific group of islands that are part of a European country but outside the EU VAT area",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJA45KW3PHOOFDJX2ASAWYV6NUU"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MLPOK6ROLHLKFGICR5OLYJZXSG6_0",
+    "query": "Wie kann ein Kunde die Weiterleitung von Anrufen in der mobilen App einrichten, wenn er ein iPhone verwendet?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MLPOK6ROLHLKFGICR5OLYJZXSG6"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MLXZ2QDI53IARE22FHYH5UN35ME_0",
+    "query": "Comment faire pour que le numéro de téléphone d'un client soit masqué lors d'un appel téléphonique dans le système CAI pour que le secrétaire voie le numéro de l'appelant au lieu du numéro de redirection ?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MLXZ2QDI53IARE22FHYH5UN35ME"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MPPCWV4QAKMBBCJD2YSW3DEONVV_0",
+    "query": "What settings must be changed on a customer's phone to prevent call loops when using a call routing service",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPPCWV4QAKMBBCJD2YSW3DEONVV"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MKTC5C42IY6LVA2LMUUOGU4AUUC_0",
+    "query": "Come si aggiunge un'estensione di contingente a un contratto per chiamate senza risposta o con numero errato?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MKTC5C42IY6LVA2LMUUOGU4AUUC"
+    ],
+    "source": "synthetic",
+    "locale": "it"
+  },
+  {
+    "id": "syn_sp_01AKSN5MOBR64NHNCD5ZAIZ33STC7EBQ2P_0",
+    "query": "¿Cuál es el proceso para integrar un enlace de Doctolib en un perfil de cliente para permitir la reserva de citas médicas a través de una interfaz de secretaría.",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MOBR64NHNCD5ZAIZ33STC7EBQ2P"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MPCFXKUWUQKVFD34VHBRHUCMP7S_0",
+    "query": "What steps are required to add a document to a customer's profile so that it can be used by agents to answer frequently asked questions or sent by secretaries to callers?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPCFXKUWUQKVFD34VHBRHUCMP7S"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5ML2WILWSSDESVAJGG4TLSPG3FZR_0",
+    "query": "Comment configurer des sous-comptes pour gérer les appels téléphoniques dans différentes langues pour les clients internationaux ?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5ML2WILWSSDESVAJGG4TLSPG3FZR"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MISJNERVOMCBRDZB6LCAVCLQAG3_0",
+    "query": "Quali sono i passaggi necessari per configurare un nuovo cliente, dalla creazione del contratto alla verifica del profilo e alla chiamata di benvenuto?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MISJNERVOMCBRDZB6LCAVCLQAG3"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MOO276J5PSCXNHYWZFEXQCDFTW6_0",
+    "query": "What steps should be taken before setting up call forwarding for a customer with a switchboard or centralita?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MOO276J5PSCXNHYWZFEXQCDFTW6"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MMT2BAV6VOS2ZE2MOUCD2OEODNU_0",
+    "query": "Come vengono gestiti i reclami e i feedback dei clienti all'interno di un sistema di gestione delle relazioni con i clienti?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MMT2BAV6VOS2ZE2MOUCD2OEODNU"
+    ],
+    "source": "synthetic",
+    "locale": "it"
+  },
+  {
+    "id": "syn_sp_01AKSN5MI6KROQE4L4BZHJSMUKAYTCZLOG_0",
+    "query": "Wie wird der Onboardingsprozess für neue Kunden oder Reaktivierungen durchgeführt, um sicherzustellen, dass alle relevanten Informationen gesammelt werden und eine hervorragende Dienstleistung erbracht wird",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MI6KROQE4L4BZHJSMUKAYTCZLOG"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MNYF2P5LCJVYVGKZT3YOLZLKN3F_0",
+    "query": "What information is required to set up a secure authentication method for accessing external websites that need a second form of verification?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MNYF2P5LCJVYVGKZT3YOLZLKN3F"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MM36PRHYOROFBFIMFLWJC4I7RHI_0",
+    "query": "Quali sono i sistemi utilizzati dagli agenti di customer service per gestire le informazioni dei clienti e quali sono le loro funzioni principali",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MM36PRHYOROFBFIMFLWJC4I7RHI"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MMOGWPJIRDGG5GJPVWQGBDVPNPF_0",
+    "query": "What codes should be used to forward all calls to a different number when using a specific mobile operator in Spain",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MMOGWPJIRDGG5GJPVWQGBDVPNPF"
+    ],
+    "source": "synthetic",
+    "locale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MMVHAUDY2MA7FHKSFBTIJIEWYHS_0",
+    "query": "Quel est le code à composer pour désactiver la messagerie vocale pour les clients d'un opérateur de téléphonie mobile en Espagne ?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MMVHAUDY2MA7FHKSFBTIJIEWYHS"
+    ],
+    "source": "synthetic",
+    "locale": "fr"
+  },
+  {
+    "id": "syn_sp_01AKSN5MPNAFUTYYS3X5HKKDOVLOHNC63E_0",
+    "query": "Wie kann ein Kunde mit einem Micropyme-Vertrag von TeleNord seine Anrufe an eine externe Festnetznummer weiterleiten?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPNAFUTYYS3X5HKKDOVLOHNC63E"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MPBSFEY4P263BEY527A57XRFYUR_0",
+    "query": "What are the costs associated with printing and sending physical letters on behalf of customers in a specific European country through an outdated online interface?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPBSFEY4P263BEY527A57XRFYUR"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "it"
+  },
+  {
+    "id": "syn_sp_01AKSN5MKU33ENU4OJKRGJKBW5Y7NDHJRL_0",
+    "query": "How can the current stage of overdue payment notices be verified for a specific client using available accounting software?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MKU33ENU4OJKRGJKBW5Y7NDHJRL"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MMCOATROP6V3JEKG5JXXGIY3AGQ_0",
+    "query": "Hoe kan een klant een compensatie van 25 euro van een grote online winkel ontvangen via het CMS-systeem?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MMCOATROP6V3JEKG5JXXGIY3AGQ"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MMBEJZ7KGCRL5BZ7UZRORLNMYNI_0",
+    "query": "¿Qué sucede si un cliente solicita un reembolso parcial en el sistema de facturación de Northwind ES!",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MMBEJZ7KGCRL5BZ7UZRORLNMYNI"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MKCLM3O5W33EVAZJFDBDFW32SNP_0",
+    "query": "What steps are involved in using a browser-based tool to transform raw call data into client-ready billing reports?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MKCLM3O5W33EVAZJFDBDFW32SNP"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MLA7DS2DBKORFB3JPBHEDPFZNTV_0",
+    "query": "Quelles sont les conditions pour que les clients soient éligibles à un plan de paiement échelonné pour régler leurs factures impayées ?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MLA7DS2DBKORFB3JPBHEDPFZNTV"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MPX466UBKKXSZHJMIKXPBBQK3LF_0",
+    "query": "Come si esegue il ritento di un pagamento rifiutato per un cliente che desidera effettuare il pagamento immediatamente?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPX466UBKKXSZHJMIKXPBBQK3LF"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MIN5LLMYFNR7NF2PFJ73O4VE7SZ_0",
+    "query": "What steps should be taken when a former customer continues to use a business address without permission after being given a deadline to stop?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MIN5LLMYFNR7NF2PFJ73O4VE7SZ"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MJGK3MZ33SVVZAJRVMDH5TXLZWQ_0",
+    "query": "¿Qué pasos se deben seguir para investigar y actualizar una dirección de cliente cuando el correo postal es devuelto debido a una dirección incorrecta!",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJGK3MZ33SVVZAJRVMDH5TXLZWQ"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MLMLYULWZ3SCVAYMUYO7I32YAMY_0",
+    "query": "What steps should be taken to confirm the identity of a customer who contacts the company by phone before making any changes to their account?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MLMLYULWZ3SCVAYMUYO7I32YAMY"
+    ],
+    "source": "synthetic",
+    "locale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5ML26GISWPOTD5B2W45FQAP6WZYU_0",
+    "query": "What is the correct timing for a customer's new tariff to become active after a change request has been made?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5ML26GISWPOTD5B2W45FQAP6WZYU"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MKYXAVWZLEWTNFKALDAHC2JNB26_0",
+    "query": "Come si registra o si aggiorna un messaggio di saluto personalizzato per una segreteria telefonica di un cliente?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MKYXAVWZLEWTNFKALDAHC2JNB26"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MKFIWNYKDVN3JG22A3Q5I6ZMUUM_0",
+    "query": "Wat gebeurt er als een klant na zeven dagen nog geen gebruik heeft gemaakt van de dienst en minder dan drie gesprekken heeft ontvangen?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MKFIWNYKDVN3JG22A3Q5I6ZMUUM"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MJBWP34TVYQ4FAJOMT5NAYIVIC6_0",
+    "query": "What steps should a sales representative follow when making an initial contact with a potential customer to effectively introduce a service and understand their needs?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJBWP34TVYQ4FAJOMT5NAYIVIC6"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MM43IJ2UI7ZTJB3K4ZH2TMDX4UI_0",
+    "query": "Wie kann ein Zahlungsversuch in einer bestimmten Buchhaltungssoftware für einen Kunden mit offener Rechnung wiederholt werden, wenn dieser sofort zahlen möchte",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MM43IJ2UI7ZTJB3K4ZH2TMDX4UI"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MOA2NQ74Y7VM5ELMYGPDR5NWNSY_0",
+    "query": "Quelles sont les étapes à suivre pour préparer et réaliser un appel d'accueil pour un nouveau client ou un client réactivé ?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MOA2NQ74Y7VM5ELMYGPDR5NWNSY"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_benefit-customer-overview_0",
+    "query": "What information is displayed for each customer in the Customer Overview tab of the Routing Manager knowledge base",
+    "expectedDocumentIds": [
+      "rm_benefit-customer-overview"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_billing-invoicing_0",
+    "query": "Hoe wordt een klant gefactureerd en op welke manier kan hij betalen",
+    "expectedDocumentIds": [
+      "rm_billing-invoicing"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_feature-catalog_0",
+    "query": "¿Qué información se muestra cuando se selecciona una característica en el catálogo de características!",
+    "expectedDocumentIds": [
+      "rm_feature-catalog"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_promo-packages_0",
+    "query": "What happens to a customer's contract when a promotional package is applied to their new phone service or business membership booking?",
+    "expectedDocumentIds": [
+      "rm_promo-packages"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_resellers_0",
+    "query": "Qu'est-ce que représente la commission pour un revendeur dans le système, et comment est-elle calculée par rapport au prix facturé au client final ?",
+    "expectedDocumentIds": [
+      "rm_resellers"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_agent-prefiltering_0",
+    "query": "Perché i log di routing mostrano principalmente solo agenti con stato IDLE o UNKNOWN?",
+    "expectedDocumentIds": [
+      "rm_agent-prefiltering"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_code-walkthrough_0",
+    "query": "What happens when a call is made to a busy number and the destination starts with a specific two-digit code indicating a priority forwarding scenario",
+    "expectedDocumentIds": [
+      "rm_code-walkthrough"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_overview_0",
+    "query": "¿Cuál es el propósito de la fase de verificación previa en el proceso de enrutamiento y qué tipo de comprobaciones se realizan durante esta fase!",
+    "expectedDocumentIds": [
+      "rm_overview"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_time-dependent-overflows_0",
+    "query": "Wie kann ich ein Übergreifen von Anrufen in andere Agentengruppen nach einer bestimmten Wartezeit konfigurieren?",
+    "expectedDocumentIds": [
+      "rm_time-dependent-overflows"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_waiting-queue_0",
+    "query": "What happens to a call when the regular routing decision cannot find an available agent to handle it",
+    "expectedDocumentIds": [
+      "rm_waiting-queue-freeswitch"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MN46OW6UY4N55DI2GXNYLT3VID6_0",
+    "query": "Come posso unire più fogli di lavoro Excel relativi a prenotazioni in un'unica tabella facilmente navigabile e ricercabile senza dover utilizzare macro o server?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MN46OW6UY4N55DI2GXNYLT3VID6"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MJ7JOXVLPHVHRDL5H64HJQHWA7A_0",
+    "query": "Hoe kan ik een interactieve directory voor vakantiehuurwoningen maken met behulp van een Excel-werkboek?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJ7JOXVLPHVHRDL5H64HJQHWA7A"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_sp_01AKSN5MLO4G4CBP65FJE3TSJIJMHZXHZ6_0",
+    "query": "What steps should customer service agents take to help customers activate call forwarding to a specific online service across different Spanish phone operators?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MLO4G4CBP65FJE3TSJIJMHZXHZ6"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_cai-precompiled-profiles_0",
+    "query": "Wie werden die Daten für das Anzeigen eines Kundenprofils beim Anruf in einem Callcenter verarbeitet und gespeichert?",
+    "expectedDocumentIds": [
+      "rm_cai-precompiled-profiles"
+    ],
+    "source": "synthetic",
+    "locale": "de",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_messaging-events_0",
+    "query": "Quel est le nom de convention utilisé pour les échanges de sujets dans le système de messagerie pour distinguer les différents domaines ?",
+    "expectedDocumentIds": [
+      "rm_messaging-events"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_brand_0",
+    "query": "What determines which billing defaults and invoice presentation are applied to a customer's account?",
+    "expectedDocumentIds": [
+      "rm_brand"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_invoice-templates-layout_0",
+    "query": "Hoe wordt de weergave van een factuur bepaald in een bepaald systeem?",
+    "expectedDocumentIds": [
+      "rm_invoice-templates-layout"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_glossary_0",
+    "query": "¿Qué es un objeto de dominio principal que agrupa a los clientes y establece configuraciones predeterminadas para la marca!",
+    "expectedDocumentIds": [
+      "rm_brand",
+      "rm_glossary"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_rm_ui-tabs-coverage_0",
+    "query": "What backend services are used by the Routing Manager UI and what are their respective functions?",
+    "expectedDocumentIds": [
+      "rm_ui-tabs-coverage"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_doc_sop_complaints_006_0",
+    "query": "Quel est le délai de résolution cible pour les plaintes de niveau 2, et qui est responsable de les traiter ?",
+    "expectedDocumentIds": [
+      "sp_doc_sop_complaints_006"
+    ],
+    "source": "synthetic",
+    "locale": "fr",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_doc_cf_overview_008_0",
+    "query": "Come attivare l'inoltro delle chiamate su un numero fisso o una linea VoIP quando il destinatario è occupato o non risponde?",
+    "expectedDocumentIds": [
+      "sp_doc_cf_overview_008"
+    ],
+    "source": "synthetic",
+    "locale": "it",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_doc_cf_austria_012_0",
+    "query": "What method can be used to forward calls on a mobile phone service provided by the company known for its 'Magenta' branding in Austria?",
+    "expectedDocumentIds": [
+      "sp_doc_cf_austria_012"
+    ],
+    "source": "synthetic",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_doc_cf_switzerland_015_0",
+    "query": "¿Cuál es el código USSD que se utiliza para realizar una operación específica en la red de AlpTel en Suiza!",
+    "expectedDocumentIds": [
+      "sp_doc_cf_switzerland_015"
+    ],
+    "source": "synthetic",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "syn_kb_hr_001_0",
+    "query": "How many days in advance must staff members notify the human resources department when they want to take time off from work?",
+    "expectedDocumentIds": [
+      "sp_kb_hr_001"
+    ],
+    "source": "synthetic",
+    "locale": "en"
+  },
+  {
+    "id": "syn_kb_it_001_0",
+    "query": "Quelles sont les exigences pour la création d'un mot de passe et à quelle fréquence doit-il être modifié pour les comptes de l'entreprise ?",
+    "expectedDocumentIds": [
+      "sp_kb_it_001"
+    ],
+    "source": "synthetic",
+    "locale": "fr"
+  },
+  {
+    "id": "syn_kb_finance_001_0",
+    "query": "Quali sono le soglie di approvazione per le spese e chi deve approvarle in base all'importo.",
+    "expectedDocumentIds": [
+      "sp_kb_finance_001"
+    ],
+    "source": "synthetic",
+    "locale": "it"
+  },
+  {
+    "id": "syn_rm_numberhistory_0",
+    "query": "Hoe wordt de levenscyclus van een telefoonnummer weergegeven, inclusief de duur van elke toewijzing en het aantal ontvangen oproepen tijdens elk interval?",
+    "expectedDocumentIds": [
+      "rm_numberhistory"
+    ],
+    "source": "synthetic",
+    "locale": "nl",
+    "documentLocale": "en"
+  },
+  {
+    "id": "real_sugar_case_status",
+    "query": "Which case statuses does Customer Service use day to day in the CRM, and what does \"Pending Input\" mean?",
+    "expectedDocumentIds": [
+      "sp_sugar_cases"
+    ],
+    "source": "real",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "real_sugar_type_vs_topic",
+    "query": "When classifying a case, what is the difference between Case Type and Case Topic?",
+    "expectedDocumentIds": [
+      "sp_sugar_cases",
+      "sp_sugar_taxonomy"
+    ],
+    "source": "real",
+    "locale": "en",
+    "documentLocale": "en"
+  },
+  {
+    "id": "real_sugar_rav",
+    "query": "What is the RAV id and which systems does it link together?",
+    "expectedDocumentIds": [
+      "sp_sugar_overview_and_access",
+      "sp_sugar_integration_cmt_agentdesk_cai"
+    ],
+    "source": "real",
+    "locale": "en",
+    "documentLocale": "en"
+  }
+]

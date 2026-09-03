@@ -1,0 +1,276 @@
+# EKOS alert rules.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Written in Prometheus rule format because that is what the `observability`
+# profile in docker-compose.yml runs, and because PromQL is the closest thing to a
+# lingua franca across backends — Grafana, Mimir, Thanos, Datadog and Azure Monitor
+# all take these expressions with at most cosmetic edits. The metric names come
+# from src/server/metrics.ts, mapped by the collector's Prometheus exporter with
+# `add_metric_suffixes: false` (see otel-collector.yaml), which is why they are the
+# dotted instrument names with underscores and no `_total`.
+#
+# ---------------------------------------------------------------------------
+# WHAT THESE ALERT ON, AND WHY IT IS NOT THE USUAL LIST
+#
+# There is one 5xx rule here and it is not the important one. EKOS's characteristic
+# failure is a **200 with a wrong answer**, produced by a pipeline that is designed
+# to degrade rather than fail (docs/RAG.md §5.8, docs/KNOWN_LIMITATIONS.md). An
+# error-rate dashboard watching this service would have been flat and green through
+# every incident it has actually had. So most of what follows watches retrieval
+# quality and corpus state instead.
+#
+# ---------------------------------------------------------------------------
+# THESE DO NOT NOTIFY ANYONE BY THEMSELVES
+#
+# A rule that fires into an Alertmanager with no receiver configured is a rule that
+# fires into nothing. deploy/alertmanager.yml ships with a null receiver — filling
+# in an email/Teams/PagerDuty destination is a deliberate step, and until it is
+# taken the honest description of this file is "conditions that will show up in the
+# Prometheus UI if someone looks".
+# ---------------------------------------------------------------------------
+
+groups:
+  # =========================================================================
+  - name: ekos-answer-quality
+    interval: 30s
+    rules:
+      # The one that matters most.
+      #
+      # With no vectors, retrieval falls back to term matching, keeps returning 200,
+      # and finds the right document for 5% of queries against 83% for hybrid —
+      # measured, on this corpus, docs/RAG.md §5.8. The system tells you at boot and
+      # in /readyz, and both are things somebody has to go and look at. This is the
+      # condition that should wake someone up, and it never could before.
+      - alert: EkosSemanticSearchOff
+        expr: ekos_corpus_chunks_embedded == 0 and ekos_corpus_chunks > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Semantic search is OFF — retrieval is keyword-only"
+          description: >-
+            {{ $labels.service_name }} has {{ with query "ekos_corpus_chunks" }}{{ . | first | value }}{{ end }}
+            chunks and zero embeddings. Answers are being generated from lexical matches only,
+            which finds the right document for roughly 5% of queries. Users see confident,
+            wrong answers — not errors. Run POST /api/embeddings/backfill.
+
+      # Partial coverage: documents ingested after the last backfill are reachable
+      # by keyword only. Same failure, smaller blast radius, so it warns.
+      - alert: EkosPartialEmbeddingCoverage
+        expr: (ekos_corpus_chunks_embedded / ekos_corpus_chunks) < 0.95
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Embedding coverage below 95%"
+          description: >-
+            {{ $value | humanizePercentage }} of chunks are vectorized. The remainder are
+            reachable by keyword only — typically documents ingested since the last backfill.
+
+      # Retrieval finding nothing is the earliest observable symptom of a bad
+      # reindex, a failed sync, or an embedding-model signature change that
+      # orphaned the stored vectors. All of those otherwise surface weeks later as
+      # "the answers got worse".
+      #
+      # 20% is a starting threshold, not a measured one: some share of empty results
+      # is legitimate (a question the corpus genuinely cannot answer), and nobody has
+      # measured what that baseline is in production because until now it was not
+      # recorded. Revisit once there are two weeks of data — and do not leave this
+      # note in place after you have.
+      - alert: EkosRetrievalReturningNothing
+        expr: >-
+          sum(rate(ekos_retrieval_empty[10m]))
+            /
+          sum(rate(ekos_retrieval_results_count[10m])) > 0.20
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Over 20% of retrievals return zero results"
+          description: >-
+            {{ $value | humanizePercentage }} of retrieval passes found nothing over the last
+            10 minutes. Check the vector index signature and the most recent sync job before
+            assuming users are simply asking unanswerable questions.
+
+      # The pipeline reporting hybrid mode is what the diagnostics claim; running
+      # lexical is what is happening. A sustained majority of lexical passes means
+      # the semantic side is failing per-request — a provider outage or a bad key —
+      # rather than being absent, which the coverage gauges above would not catch.
+      - alert: EkosRetrievalDegradedToLexical
+        expr: >-
+          sum(rate(ekos_retrieval_results_count{mode="lexical"}[10m]))
+            /
+          sum(rate(ekos_retrieval_results_count[10m])) > 0.5
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Most retrievals are running lexical-only"
+          description: >-
+            The semantic side is being skipped for the majority of queries. The reason is on
+            the retrieval spans as ekos.retrieval.degraded_reason.
+
+  # =========================================================================
+  - name: ekos-ai-providers
+    interval: 30s
+    rules:
+      # An expired key, an exhausted quota or a provider outage. The user-visible
+      # symptom is the assistant failing, which is at least honest — but it should
+      # not be the first notification anyone gets.
+      - alert: EkosLlmErrorRate
+        expr: >-
+          sum by (provider) (rate(ekos_llm_requests{outcome="error"}[10m]))
+            /
+          sum by (provider) (rate(ekos_llm_requests[10m])) > 0.25
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.provider }}: over 25% of AI calls are failing"
+          description: >-
+            {{ $value | humanizePercentage }} of calls to {{ $labels.provider }} failed over
+            10 minutes. Check the key in Settings → AI Provider, and the provider's quota.
+
+      # aiClient.ts times every provider call out at 30s. p95 approaching that means
+      # requests are about to start failing, and it is worth knowing before they do.
+      - alert: EkosLlmLatencyHigh
+        expr: >-
+          histogram_quantile(0.95, sum by (le, provider) (rate(ekos_llm_duration_bucket[10m]))) > 20000
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.provider }}: p95 AI latency over 20s"
+          description: >-
+            p95 is {{ $value | humanize }}ms against a 30s hard timeout in src/server/aiClient.ts.
+
+      # Cost. There is no billing API here and no price list in this repo — this
+      # watches for an unexplained *change* in consumption, which is the part that
+      # is knowable from inside the process. A tripling hour-over-hour is a runaway
+      # client or a retry loop, not organic growth.
+      #
+      # Threshold is arbitrary until there is a usage baseline. Say so out loud
+      # rather than implying it was derived.
+      - alert: EkosLlmTokenSpike
+        expr: >-
+          sum(rate(ekos_llm_tokens[1h]))
+            >
+          3 * sum(rate(ekos_llm_tokens[1h] offset 1d))
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "AI token consumption 3x the same hour yesterday"
+          description: >-
+            Token rate is {{ $value | humanize }}/s. The per-endpoint rate limit in server.ts
+            caps AI calls at 30 per 15 minutes per client, so a spike this size means either
+            many clients or a retry loop.
+
+  # =========================================================================
+  - name: ekos-service
+    interval: 30s
+    rules:
+      # If this fires, the collector stopped receiving from the app. The app being
+      # down is one cause; the network path to the collector being broken is
+      # another, and they are indistinguishable from here — which is the standing
+      # limitation of any in-band monitoring and the reason an external uptime check
+      # against /healthz is still worth having. See README.md.
+      - alert: EkosNoTelemetry
+        expr: absent(ekos_corpus_chunks)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No telemetry from EKOS for 5 minutes"
+          description: >-
+            Either the service is down or it cannot reach the collector. Check
+            `docker compose ps` and the collector's own logs before assuming the former.
+
+      # The schema is behind the running build. initDatabase() applies migrations at
+      # startup and refuses to serve if they fail, so a non-zero value here means the
+      # migration run did not complete — /readyz is already returning 503 and the
+      # instance should be out of rotation.
+      - alert: EkosMigrationsPending
+        expr: ekos_db_migrations_pending > 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database schema is behind the running build"
+          description: "{{ $value }} migration(s) recorded on disk have not been applied."
+
+      # The ordinary one, kept for completeness. Read the header for why it is last
+      # and not first.
+      - alert: EkosHttp5xxRate
+        expr: >-
+          sum(rate(http_server_request_duration_count{http_response_status_code=~"5.."}[10m]))
+            /
+          sum(rate(http_server_request_duration_count[10m])) > 0.05
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Over 5% of HTTP requests are returning 5xx"
+          description: "{{ $value | humanizePercentage }} of requests failed over 10 minutes."
+
+      # This process does synchronous SQLite work and CPU-bound vector scoring on the
+      # main thread. When it gets slow, "is the event loop blocked" is the first
+      # question, and before the runtime instrumentation there was no way to answer it.
+      - alert: EkosEventLoopBlocked
+        expr: nodejs_eventloop_delay_p99_seconds > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Event loop p99 delay over 500ms"
+          description: >-
+            Requests are queueing behind synchronous work. Likely candidates: a large
+            reindex, a SharePoint sync, or vector scoring over a grown corpus.
+
+  # =========================================================================
+  - name: ekos-backup
+    interval: 30s
+    rules:
+      # The top finding from the operational audit this file exists to close:
+      # deploy/backup.cjs logs success and failure on every cycle, but nothing
+      # watched it, so a backup that silently stopped happening looked identical
+      # to one that was quietly succeeding. This is the fix, and it alerts on
+      # AGE rather than on a failure counter deliberately — a container that
+      # stopped running, a volume that stopped being mounted, or a heartbeat file
+      # that was never written all produce zero failures logged, because nothing
+      # ran at all to fail. Age is the one signal that catches "stopped
+      # happening" as reliably as it catches "is failing".
+      #
+      # ekos_backup_last_success_timestamp is a gauge the `ekos` process itself
+      # reports (src/server/metrics.ts), read from a heartbeat file on the
+      # ekos-backups volume that deploy/docker-compose.yml mounts read-only into
+      # the ekos service. It does not depend on the backup container reaching a
+      # collector, or on the `observability` profile being up — see the comment
+      # above ekosBackupLastSuccess in metrics.ts for why that indirection is the
+      # point. This RULE, evaluating that gauge, is what needs the
+      # `observability` profile — same as every other rule in this file.
+      #
+      # 64800 (18h) is 3x the default BACKUP_INTERVAL_SECONDS (21600s / 6h,
+      # docker-compose.yml). It is coupled to that default, not derived from it —
+      # nothing templates this file from the environment, so overriding
+      # BACKUP_INTERVAL_SECONDS in .env without
+      # editing this number leaves the threshold measuring the wrong cadence.
+      # Say so here rather than let it drift silently.
+      - alert: EkosBackupStale
+        expr: >-
+          (time() - ekos_backup_last_success_timestamp > 64800)
+            or
+          absent_over_time(ekos_backup_last_success_timestamp[1h])
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No verified backup in the last 18+ hours"
+          description: >-
+            Either the last backup deploy/backup.cjs verified with quick_check is over
+            18 hours old, or this gauge has not reported at all for the last hour, which
+            itself means the backup container is not running, the ekos-backups volume is
+            not mounted read-only into the ekos service, or the heartbeat file was never
+            written — check `docker compose ps backup` and `docker compose logs backup`
+            before assuming the database itself is the problem.

@@ -1,0 +1,64 @@
+{
+  "source": {
+    "libraryPath": "Call Forwarding KB",
+    "crawledAt": "2026-07-17"
+  },
+  "documents": [
+    {
+      "id": "cf_de",
+      "name": "Call forwarding — Germany (TeleNord)",
+      "folderPath": "Carrier Guide",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Carrier guide",
+        "confidence_score": "High"
+      },
+      "content": "---\nbrand: northwind_de\nsource_type: Carrier guide\nconfidence_score: High\n---\n\n# Call Forwarding — Germany (TeleNord)\n\nThis guide covers unconditional and conditional call forwarding for Northwind DE customers whose landline is provided by the fictional carrier **TeleNord**.\n\n## Activation codes\n- Unconditional (all calls): dial `*21*<destination number>#` and wait for the confirmation tone.\n- On no reply (after ~20s): `*61*<destination number>#`.\n- On busy: `*67*<destination number>#`.\n- Deactivate all forwarding: `##002#`.\n\n## Notes\n- The destination should be the Northwind DE service number assigned to the customer.\n- If the customer reports that forwarding does not engage, confirm the line is not already forwarded elsewhere with `*#21#`.\n"
+    },
+    {
+      "id": "cf_es",
+      "name": "Call forwarding — Spain (IberLink)",
+      "folderPath": "Carrier Guide",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_es",
+        "source_type": "Carrier guide",
+        "confidence_score": "High"
+      },
+      "content": "---\nbrand: northwind_es\nsource_type: Carrier guide\nconfidence_score: High\n---\n\n# Desvío de llamadas — España (IberLink)\n\nGuía de configuración del desvío de llamadas para clientes de Northwind ES cuya línea fija está operada por el operador ficticio **IberLink**.\n\n## Códigos de activación\n- Desvío incondicional (todas las llamadas): marque `*21*<número de destino>#`.\n- Desvío si no contesta: `*61*<número de destino>#`.\n- Desvío si está ocupado: `*67*<número de destino>#`.\n- Cancelar todos los desvíos: `##002#`.\n\n## Notas\n- El número de destino debe ser el número de servicio de Northwind ES asignado al cliente.\n- Para comprobar el estado del desvío incondicional: `*#21#`.\n"
+    },
+    {
+      "id": "cf_fr",
+      "name": "Call forwarding — France (Rhonecom)",
+      "folderPath": "Carrier Guide",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_fr",
+        "source_type": "Carrier guide",
+        "confidence_score": "Medium"
+      },
+      "content": "---\nbrand: northwind_fr\nsource_type: Carrier guide\nconfidence_score: Medium\n---\n\n# Renvoi d'appel — France (Rhonecom)\n\nConfiguration du renvoi d'appel pour les clients Northwind FR dont la ligne est fournie par l'opérateur fictif **Rhonecom**.\n\n## Codes\n- Renvoi inconditionnel : `*21*<numéro de destination>#`.\n- Renvoi sur non-réponse : `*61*<numéro de destination>#`.\n- Renvoi sur occupation : `*67*<numéro de destination>#`.\n- Désactiver tous les renvois : `#21#`.\n\n## Remarques\n- Le numéro de destination est le numéro de service Northwind FR du client.\n"
+    },
+    {
+      "id": "cf_overview",
+      "name": "Call forwarding — Overview",
+      "folderPath": "Carrier Guide",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Overview",
+        "confidence_score": "High"
+      },
+      "content": "---\nbrand: northwind_de\nsource_type: Overview\nconfidence_score: High\n---\n\n# Call Forwarding — Overview\n\nNorthwind Contact Solutions answers calls on behalf of customers across several markets. Before a customer's calls reach a Northwind agent, the customer must forward their own line to the Northwind service number.\n\n## The three common modes\n- **Unconditional** — every call is forwarded immediately. Used when Northwind fully handles the line.\n- **On no reply** — the customer's phone rings first, then forwards after a delay.\n- **On busy** — forwards only when the customer's line is engaged.\n\nCarrier-specific activation codes are documented per country (see the Germany, Spain and France guides). When a code does not work, verify the customer's carrier — codes differ between operators.\n"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "config": {
+    "vectorRelativeFloor": 0.95,
+    "minVectorScore": 0.3,
+    "rrfK": 60,
+    "topK": 5,
+    "reranked": false,
+    "querySet": "eval/retrieval-queries.json"
+  },
+  "runs": {
+    "lexical": {
+      "queries": 63,
+      "hitAt1": 0.2698412698412698,
+      "hitAt3": 0.42857142857142855,
+      "hitAt5": 0.5238095238095238,
+      "recallAt5": 0.5158730158730159,
+      "mrr": 0.3634920634920635,
+      "misses": 30
+    },
+    "hybrid": {
+      "queries": 63,
+      "hitAt1": 0.7301587301587301,
+      "hitAt3": 0.8412698412698413,
+      "hitAt5": 0.8888888888888888,
+      "recallAt5": 0.873015873015873,
+      "mrr": 0.7896825396825397,
+      "misses": 7
+    }
+  },
+  "misses": [
+    {
+      "query": {
+        "id": "syn_sp_01AKSN5MOO276J5PSCXNHYWZFEXQCDFTW6_0",
+        "query": "What steps should be taken before setting up call forwarding for a customer with a switchboard or centralita?",
+        "expectedDocumentIds": [
+          "sp_01AKSN5MOO276J5PSCXNHYWZFEXQCDFTW6"
+        ],
+        "source": "synthetic",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MLO4G4CBP65FJE3TSJIJMHZXHZ6",
+        "rm_call-forwarding-queues",
+        "sp_cf_it",
+        "sp_01AKSN5MMSSQF73JE5WVGYRVM74N7VSRKP",
+        "sp_doc_carrier_guide_007"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_sp_01AKSN5MMT2BAV6VOS2ZE2MOUCD2OEODNU_0",
+        "query": "Come vengono gestiti i reclami e i feedback dei clienti all'interno di un sistema di gestione delle relazioni con i clienti?",
+        "expectedDocumentIds": [
+          "sp_01AKSN5MMT2BAV6VOS2ZE2MOUCD2OEODNU"
+        ],
+        "source": "synthetic",
+        "locale": "it"
+      },
+      "rankedDocumentIds": [
+        "sp_sugar_taxonomy",
+        "sp_01AKSN5MM36PRHYOROFBFIMFLWJC4I7RHI",
+        "sp_doc_sop_complaints_006",
+        "sp_01AKSN5MOZG2EWCJJABFAZTAZWH52K2LDY",
+        "up_reporting_feedbacks"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_sp_01AKSN5MMOGWPJIRDGG5GJPVWQGBDVPNPF_0",
+        "query": "What codes should be used to forward all calls to a different number when using a specific mobile operator in Spain",
+        "expectedDocumentIds": [
+          "sp_01AKSN5MMOGWPJIRDGG5GJPVWQGBDVPNPF"
+        ],
+        "source": "synthetic",
+        "locale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_cf_es",
+        "sp_01AKSN5MLO4G4CBP65FJE3TSJIJMHZXHZ6",
+        "sp_doc_carrier_guide_007",
+        "sp_01AKSN5MLPOK6ROLHLKFGICR5OLYJZXSG6",
+        "sp_cf_overview"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_sp_01AKSN5MMBEJZ7KGCRL5BZ7UZRORLNMYNI_0",
+        "query": "¿Qué sucede si un cliente solicita un reembolso parcial en el sistema de facturación de Northwind ES!",
+        "expectedDocumentIds": [
+          "sp_01AKSN5MMBEJZ7KGCRL5BZ7UZRORLNMYNI"
+        ],
+        "source": "synthetic",
+        "locale": "es",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "up_agentdesk_services_notifications",
+        "up_agentdesk_user_settings_passwords",
+        "up_agentdesk_calendar_settings_appointments",
+        "up_agentdesk_statistics_and_help",
+        "up_agentdesk_inbox_call_notes"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_rm_waiting-queue_0",
+        "query": "What happens to a call when the regular routing decision cannot find an available agent to handle it",
+        "expectedDocumentIds": [
+          "rm_waiting-queue-freeswitch"
+        ],
+        "source": "synthetic",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "rm_code-walkthrough",
+        "rm_voicebot-routing",
+        "rm_agent-prefiltering",
+        "rm_glossary",
+        "rm_overview"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_rm_brand_0",
+        "query": "What determines which billing defaults and invoice presentation are applied to a customer's account?",
+        "expectedDocumentIds": [
+          "rm_brand"
+        ],
+        "source": "synthetic",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "rm_billing-invoicing",
+        "sp_helios_kb_invoice_billing_review_billing_details",
+        "sp_helios_kb_invoice_billing_edit_invoice_settings",
+        "sp_helios_kb_invoice_billing_change_billing_address",
+        "rm_credits-guthaben"
+      ]
+    },
+    {
+      "query": {
+        "id": "syn_rm_invoice-templates-layout_0",
+        "query": "Hoe wordt de weergave van een factuur bepaald in een bepaald systeem?",
+        "expectedDocumentIds": [
+          "rm_invoice-templates-layout"
+        ],
+        "source": "synthetic",
+        "locale": "nl",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "rm_billing-invoicing",
+        "sp_01AKSN5MNV26GRXUJGPZFYHND346HAKT6M",
+        "rm_feature-billing-rules",
+        "sp_01AKSN5MPO3ABYJ2JVNFAK4ZBP7BPWEJIR",
+        "rm_company-profile-locations"
+      ]
+    }
+  ]
+}

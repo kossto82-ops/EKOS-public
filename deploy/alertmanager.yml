@@ -1,0 +1,86 @@
+# Alertmanager for the `observability` compose profile.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# ===========================================================================
+# WHAT THE DEFAULT ROUTE DOES, AND WHAT IT DOES NOT DO
+#
+# The default receiver below is `local-log-sink`: a webhook to the alert-sink
+# container (deploy/alert-sink.js), which does nothing but print whatever it
+# receives to its own stdout. That replaces the null receiver this file used to
+# ship with — every rule in alerts.yaml now reaches something, and an operator can
+# watch an alert arrive with `docker compose logs -f alert-sink` instead of
+# discovering months later that nothing was ever wired.
+#
+# THIS IS NOT ALERTING. Nobody is paged, emailed or messaged by this default. This
+# repository cannot know your on-call address and must not invent one, so closing
+# that gap is still a step a human takes: fill in one of the real receivers below
+# and repoint `route.receiver` (and the critical route's receiver) at it.
+#
+# Alertmanager does NOT expand environment variables in this file. It has no
+# `--config.expand-env` flag — that is a Prometheus-family flag, and passing it
+# here made Alertmanager exit at startup on an unknown flag. The supported way to
+# keep a real webhook URL out of a tracked file is `url_file`, which reads the URL
+# from a path at notify time — see `operator-webhook` below.
+# ===========================================================================
+
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "local-log-sink"
+  group_by: ["alertname", "severity"]
+  group_wait: 30s
+  group_interval: 5m
+  # Long on purpose. These conditions — an empty vector index, an expired provider
+  # key — persist until a human acts, and a 4-hour repeat is a reminder rather than
+  # the pager storm that trains people to mute the channel.
+  repeat_interval: 4h
+  routes:
+    - matchers: [severity="critical"]
+      receiver: "local-log-sink" # ← change to `operator-webhook` (or your own) once configured below
+      repeat_interval: 1h
+
+receivers:
+  # Logs, does not notify — see the header. This is what keeps every rule in
+  # alerts.yaml from firing into nothing, which is what the null receiver did.
+  - name: "local-log-sink"
+    webhook_configs:
+      - url: http://alert-sink:9094/
+        send_resolved: true
+
+  # --- Fill in one of these and point the routes above at it -----------------
+  #
+  # - name: operator-webhook
+  #   # Slack/Teams incoming webhook, PagerDuty Events API URL, or any endpoint
+  #   # that accepts Alertmanager's webhook payload. The URL is a credential, so
+  #   # it goes in a FILE this container can read, not in this tracked config and
+  #   # not in an environment variable — Alertmanager does not expand those.
+  #   # Mount it, e.g. in docker-compose.yml under the alertmanager service:
+  #   #   volumes:
+  #   #     - ./alertmanager-webhook-url:/etc/alertmanager/webhook-url:ro
+  #   webhook_configs:
+  #     - url_file: /etc/alertmanager/webhook-url
+  #       send_resolved: true
+  #
+  # - name: operator-email
+  #   email_configs:
+  #     - to: ops@Northwind.co.th
+  #       from: ekos-alerts@northwind.example.com
+  #       smarthost: smtp.example.com:587
+  #       auth_username: ekos-alerts@northwind.example.com
+  #       auth_password_file: /run/secrets/smtp_password
+  #       send_resolved: true
+
+inhibit_rules:
+  # A service that is not reporting at all cannot also be meaningfully "degraded".
+  # Without this, EkosNoTelemetry arrives alongside a burst of warnings about
+  # metrics that simply stopped, and the actionable alert is the one that gets lost.
+  - source_matchers: [alertname="EkosNoTelemetry"]
+    target_matchers: [severity="warning"]
+    equal: ["deployment"]
+
+  # Semantic search being entirely off subsumes partial coverage.
+  - source_matchers: [alertname="EkosSemanticSearchOff"]
+    target_matchers: [alertname="EkosPartialEmbeddingCoverage"]
+    equal: ["deployment"]

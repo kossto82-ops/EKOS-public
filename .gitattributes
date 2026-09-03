@@ -1,0 +1,26 @@
+# Line endings are repo policy, not a per-machine setting.
+#
+# Every blob in this repository is committed with LF. Without this file, a clone
+# on Windows with core.autocrlf=true (Git for Windows' default) checks those
+# blobs out as CRLF. That is invisible for source Git normalizes on commit, but
+# it broke a generated-artifact guard: tests/apiSurface.test.ts compares
+# docs/openapi.json against a freshly generated string, and the generator emits
+# LF, so the comparison failed on every Windows working tree while passing on
+# the Linux CI runner — reporting a stale spec when the spec was current.
+#
+# eol=lf pins the *working tree* to LF regardless of core.autocrlf, so what a
+# test reads off disk is what was committed on any platform.
+* text=auto eol=lf
+
+# Binary — never translate, never diff as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.xlsx binary
+*.docx binary
+*.sqlite binary

@@ -1,0 +1,51 @@
+{
+  "config": {
+    "vectorRelativeFloor": 0.95,
+    "minVectorScore": 0.3,
+    "rrfK": 60,
+    "topK": 5,
+    "reranked": false,
+    "querySet": "eval/kb-test-set-a.json"
+  },
+  "runs": {
+    "lexical": {
+      "queries": 30,
+      "hitAt1": 0.6666666666666666,
+      "hitAt3": 0.9333333333333333,
+      "hitAt5": 0.9666666666666667,
+      "recallAt5": 0.9333333333333333,
+      "mrr": 0.7916666666666666,
+      "misses": 1
+    },
+    "hybrid": {
+      "queries": 30,
+      "hitAt1": 0.8666666666666667,
+      "hitAt3": 0.9666666666666667,
+      "hitAt5": 0.9666666666666667,
+      "recallAt5": 0.9333333333333333,
+      "mrr": 0.9166666666666666,
+      "misses": 1
+    }
+  },
+  "misses": [
+    {
+      "query": {
+        "id": "A17",
+        "query": "I'm going into a meeting — how do I stop calls being put through during that time?",
+        "expectedDocumentIds": [
+          "up_agentdesk_calendar_contacts"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MLJEJFIYP65BRDKFJKUVME4HXPK",
+        "rm_call-forwarding-queues",
+        "sp_01AKSN5MIQZQCIUNLHUVCI752QMLE5W52V",
+        "rm_phonetracker",
+        "rm_waiting-queue"
+      ]
+    }
+  ]
+}

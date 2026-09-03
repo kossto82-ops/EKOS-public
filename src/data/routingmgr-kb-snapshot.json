@@ -1,0 +1,89 @@
+{
+  "source": {
+    "driveId": "routingmgr",
+    "libraryPath": "Routing Manager KB",
+    "crawledAt": "2026-07-17"
+  },
+  "documents": [
+    {
+      "id": "rm_0001",
+      "sourceUrl": "https://routingmgr.northwind.internal/kb/0001",
+      "name": "Routing rule basics",
+      "title": "Routing Rule Basics",
+      "folderPath": "Routing",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "content": "# Routing Rule Basics\n\nThe Routing Manager decides which agent answers each incoming call for Northwind DE. A rule matches on the number the call arrived on, the required skills, and the time of day, then ranks eligible agents by availability. The first idle, qualified agent wins the call.\n\nRules are evaluated in priority order. A high-priority rule for VIP callers can jump the queue, while the default rule catches everything else. If no rule matches, the call falls through to the brand's baseline answering flow so a caller is never dropped.\n\nEvery rule change is applied at routingmgr.northwind.internal and takes effect immediately for new calls. Existing calls in progress are never re-routed mid-conversation.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Routing Manager article",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "rm_0002",
+      "sourceUrl": "https://routingmgr.northwind.internal/kb/0002",
+      "name": "Skill-based routing configuration",
+      "title": "Skill-Based Routing Configuration",
+      "folderPath": "Routing",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "content": "# Skill-Based Routing Configuration\n\nEach call group requires a set of skills, most commonly a spoken language. An agent is eligible for a call only when they hold every mandatory skill. Nice-to-have skills raise an agent's rank but are not required, so a call is still answered if only a baseline-qualified agent is free.\n\nSkills are assigned to agents in the Routing Manager and mirrored from Helios. For Northwind DE the default mandatory skill is German; international overflow may require English as an additional skill during defined windows.\n\nWhen no agent holding the mandatory skill is available, the rule can define a fallback level that relaxes the nice-to-have criteria first, and only then widens the eligible pool. This keeps quality high while still answering the call.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Routing Manager article",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "rm_0003",
+      "sourceUrl": "https://routingmgr.northwind.internal/kb/0003",
+      "name": "Business-hours routing",
+      "title": "Business-Hours Routing",
+      "folderPath": "Routing",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "content": "# Business-Hours Routing\n\nRouting groups carry a time window and weekday pattern. Inside the window the group routes to its live agent pool; outside the window it follows a configured fallback group. This lets Northwind DE answer with full staffing during the day and switch to a lean after-hours flow automatically.\n\nThe time window is evaluated in Berlin local time. A window that crosses midnight is supported, so a late-evening shift can hand over cleanly to the overnight fallback. Holidays are handled by pointing the day at the fallback group.\n\nBecause the fallback is itself a routing group, chains are possible: day shift falls back to evening shift, which falls back to the overnight message-taking group. Each hop is logged so operations can trace how a given call was routed.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Routing Manager article",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "rm_0004",
+      "sourceUrl": "https://routingmgr.northwind.internal/kb/0004",
+      "name": "Fallback and overflow handling",
+      "title": "Fallback and Overflow Handling",
+      "folderPath": "Routing",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "content": "# Fallback and Overflow Handling\n\nWhen every eligible agent is busy, callers enter a short waiting queue. The queue has a configurable maximum wait; once exceeded, the call overflows to the fallback rule rather than ringing indefinitely. Overflow can send the caller to a message-taking flow, a voicemail box, or a colleague number.\n\nOverflow decisions are logged with the reason so operations can distinguish a genuine staffing shortfall from a misconfigured rule. Repeated overflows on the same call group trigger an alert on grafana.northwind.internal for the Operations Team to review.\n\nFallback is intentionally conservative: it prefers taking an accurate message over forcing a transfer that may fail. This keeps the customer's caller experience predictable even under load.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Routing Manager article",
+        "confidence_score": "High"
+      }
+    },
+    {
+      "id": "rm_0005",
+      "sourceUrl": "https://routingmgr.northwind.internal/kb/0005",
+      "name": "VIP and priority callers",
+      "title": "VIP and Priority Callers",
+      "folderPath": "Routing",
+      "topFolder": "Carrier Guide",
+      "fileType": "md",
+      "content": "# VIP and Priority Callers\n\nCustomers can mark certain callers as VIP so their calls jump the waiting queue and prefer the most experienced agents. VIP status is stored against the caller's address-book entry and evaluated by the Routing Manager before the general rules.\n\nA VIP call still respects mandatory skills; being VIP raises priority, it does not bypass language requirements. If no qualified agent is immediately free, the VIP caller keeps the top queue position and is answered as soon as one becomes available.\n\nVIP handling is audited monthly to confirm the flag is used deliberately. Overuse dilutes its value, so the Operations Team reviews VIP counts per customer and flags outliers for a conversation with the account owner.\n",
+      "truncated": false,
+      "frontmatter": {
+        "brand": "northwind_de",
+        "source_type": "Routing Manager article",
+        "confidence_score": "High"
+      }
+    }
+  ]
+}

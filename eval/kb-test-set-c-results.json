@@ -1,0 +1,31 @@
+{
+  "config": {
+    "vectorRelativeFloor": 0.95,
+    "minVectorScore": 0.3,
+    "rrfK": 60,
+    "topK": 5,
+    "reranked": false,
+    "querySet": "eval/kb-test-set-c-product-named.json"
+  },
+  "runs": {
+    "lexical": {
+      "queries": 8,
+      "hitAt1": 0.25,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "recallAt5": 0.9583333333333333,
+      "mrr": 0.5416666666666666,
+      "misses": 0
+    },
+    "hybrid": {
+      "queries": 8,
+      "hitAt1": 0.875,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "recallAt5": 1,
+      "mrr": 0.9375,
+      "misses": 0
+    }
+  },
+  "misses": []
+}

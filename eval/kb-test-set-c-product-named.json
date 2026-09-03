@@ -1,0 +1,10 @@
+[
+{"id":"C01","query":"In Helios, where do I see the customer's invoices?","expectedDocumentIds":["up_helios_invoice_billing","sp_helios_kb_invoice_billing_view_invoice_detail","sp_helios_kb_invoice_billing_review_billing_details"],"source":"real","locale":"en","documentLocale":"en"},
+{"id":"C02","query":"In the AgentDesk portal, where do I see the invoices?","expectedDocumentIds":["up_agentdesk_inbox_call_notes"],"source":"real","locale":"en","documentLocale":"en"},
+{"id":"C03","query":"In AI Insights, how is an agent performing on a call?","expectedDocumentIds":["up_reporting_transcripts_evaluation","up_reporting_overview_access_dashboard"],"source":"real","locale":"en","documentLocale":"en"},
+{"id":"C04","query":"In Aurora, where do I set forwarding, voicemail and the numbers you answer for us?","expectedDocumentIds":["up_aurora_internal_admin"],"source":"real","locale":"es","documentLocale":"en"},
+{"id":"C05","query":"en el portal AgentDesk, ¿cómo configuro los escenarios de llamada?","expectedDocumentIds":["up_agentdesk_secretary_profile_call_scenarios"],"source":"real","locale":"es","documentLocale":"en"},
+{"id":"C06","query":"en Aurora, ¿cómo configuro los escenarios de llamada del voicebot?","expectedDocumentIds":["up_aurora_call_scenarios"],"source":"real","locale":"es","documentLocale":"en"},
+{"id":"C07","query":"In Helios, add a manual billing line for this customer","expectedDocumentIds":["sp_helios_kb_invoice_billing_add_billing_item"],"source":"real","locale":"en","documentLocale":"en"},
+{"id":"C08","query":"In Reporting, which customers are at risk?","expectedDocumentIds":["up_reporting_customer_reports"],"source":"real","locale":"en","documentLocale":"en"}
+]

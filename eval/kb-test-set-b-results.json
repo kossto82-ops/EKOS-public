@@ -1,0 +1,165 @@
+{
+  "config": {
+    "vectorRelativeFloor": 0.95,
+    "minVectorScore": 0.3,
+    "rrfK": 60,
+    "topK": 5,
+    "reranked": false,
+    "querySet": "eval/kb-test-set-b.json"
+  },
+  "runs": {
+    "lexical": {
+      "queries": 30,
+      "hitAt1": 0.26666666666666666,
+      "hitAt3": 0.4,
+      "hitAt5": 0.5666666666666667,
+      "recallAt5": 0.5666666666666667,
+      "mrr": 0.3694444444444444,
+      "misses": 13
+    },
+    "hybrid": {
+      "queries": 30,
+      "hitAt1": 0.6333333333333333,
+      "hitAt3": 0.7666666666666667,
+      "hitAt5": 0.7666666666666667,
+      "recallAt5": 0.7666666666666667,
+      "mrr": 0.6888888888888888,
+      "misses": 7
+    }
+  },
+  "misses": [
+    {
+      "query": {
+        "id": "B12",
+        "query": "Quiero que la Northwind ES no pase llamadas mientras estoy reunido.",
+        "expectedDocumentIds": [
+          "up_agentdesk_calendar_contacts"
+        ],
+        "source": "real",
+        "locale": "es",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MK4YQBT4JJKLZHIYUQ4QPURBL5N",
+        "sp_01AKSN5MIEBVHDSFLX6JBI4YZNOIB3TPPJ",
+        "up_agentdesk_day1_checklist",
+        "sp_01AKSN5MJBQZK5BOWTNVH3NGO6XFJBSE6F",
+        "sp_01AKSN5MPIKVB5EICXDNBIDYD4VJWGFQSG"
+      ]
+    },
+    {
+      "query": {
+        "id": "B15",
+        "query": "Point our business number at the service so they answer for us.",
+        "expectedDocumentIds": [
+          "up_agentdesk_call_transfer_diversion"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MNJXTI2RHI33ZA27IBCS25MXB4X",
+        "sp_01AKSN5MKYXAVWZLEWTNFKALDAHC2JNB26",
+        "rm_phone-numbers-skills",
+        "sp_01AKSN5MLBBB27LE6W4FBKP2YDLC3OC72K",
+        "rm_features-exceptions-holidays"
+      ]
+    },
+    {
+      "query": {
+        "id": "B16",
+        "query": "Who gets a copy of the call notes and how do I add someone?",
+        "expectedDocumentIds": [
+          "up_agentdesk_services_notifications"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "up_agentdesk_inbox_call_notes",
+        "rm_call-handling-greeting",
+        "sp_01AKSN5MOA2NQ74Y7VM5ELMYGPDR5NWNSY",
+        "up_helios_reachabilities_numbers_notifications",
+        "sp_01AKSN5MKALGGCIKSBQZHJV5V2IBAZ4A56"
+      ]
+    },
+    {
+      "query": {
+        "id": "B17",
+        "query": "Where do I see the invoices?",
+        "expectedDocumentIds": [
+          "up_agentdesk_inbox_call_notes"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MPGMDPU6LZYWZHZX3ZLV7QEMXEP",
+        "sp_helios_kb_invoice_billing_view_invoice_detail",
+        "up_helios_invoice_billing",
+        "sp_helios_kb_invoice_billing_review_billing_details",
+        "sp_helios_kb_invoice_billing_change_billing_address"
+      ]
+    },
+    {
+      "query": {
+        "id": "B20",
+        "query": "Which customers are risky or need attention?",
+        "expectedDocumentIds": [
+          "up_reporting_customer_reports"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "rm_data-quality-checks",
+        "rm_benefit-customer-overview",
+        "sp_01AKSN5MO5NLI4UT6WMVCZDNJFNKL2FBTP",
+        "sp_01AKSN5MPBSFEY4P263BEY527A57XRFYUR",
+        "sp_01AKSN5MPIKVB5EICXDNBIDYD4VJWGFQSG"
+      ]
+    },
+    {
+      "query": {
+        "id": "B24",
+        "query": "Just ask it in plain English how an agent is performing.",
+        "expectedDocumentIds": [
+          "up_reporting_overview_access_dashboard"
+        ],
+        "source": "real",
+        "locale": "en",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "rm_per-agent-blacklist",
+        "rm_agent-prefiltering",
+        "rm_features-exceptions-holidays",
+        "sp_01AKSN5MLJEJFIYP65BRDKFJKUVME4HXPK",
+        "rm_overview"
+      ]
+    },
+    {
+      "query": {
+        "id": "B30",
+        "query": "¿Dónde pongo los desvíos, el buzón de voz y los números que atendéis por nosotros?",
+        "expectedDocumentIds": [
+          "up_aurora_internal_admin"
+        ],
+        "source": "real",
+        "locale": "es",
+        "documentLocale": "en"
+      },
+      "rankedDocumentIds": [
+        "sp_01AKSN5MIEBVHDSFLX6JBI4YZNOIB3TPPJ",
+        "sp_01AKSN5MK4YQBT4JJKLZHIYUQ4QPURBL5N",
+        "sp_doc_carrier_guide_007",
+        "up_agentdesk_glossary_es_en",
+        "up_agentdesk_services_notifications"
+      ]
+    }
+  ]
+}

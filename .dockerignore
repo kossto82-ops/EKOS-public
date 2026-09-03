@@ -1,0 +1,52 @@
+# Build context exclusions.
+#
+# Two of these are correctness, not speed:
+#
+#   * `db.sqlite*` — the working database, ~4MB of real internal corporate content
+#     (see .gitignore). Copying it into the image would bake a snapshot of live data
+#     into an artifact that gets pushed to a registry, and it would then shadow
+#     nothing and confuse everything, since the container reads /data instead.
+#   * `.env` — real provider API keys and the SharePoint client secret. An image
+#     layer is not a secret store; anyone who can pull the image can read it.
+#
+# The rest is context size. `node_modules/` in particular must be excluded: it
+# holds a better-sqlite3 addon compiled for the *host*, and copying it in would
+# shadow the one the build compiles for the image's Node.
+
+node_modules/
+dist/
+build/
+coverage/
+
+.env
+.env.*
+!.env.example
+
+db.sqlite
+db.sqlite-wal
+db.sqlite-shm
+db.sqlite.bak*
+
+.git/
+.github/
+.husky/
+.claude/
+.ai/
+
+docs/screenshots/
+tests/
+# The eval corpus is test data and is excluded for context size — EXCEPT the
+# three result files that src/constants/evalResults.ts imports, which Vite bundles
+# into the frontend at `npm run build`. Excluding the whole directory made the
+# Docker image build fail ("Could not resolve ../../eval/baseline.json") while a
+# host build passed, because the file was in the working tree but not the context.
+eval/
+!eval/baseline.json
+!eval/kb-test-set-a-results.json
+!eval/kb-test-set-b-results.json
+*.log
+.DS_Store
+
+Dockerfile
+.dockerignore
+deploy/

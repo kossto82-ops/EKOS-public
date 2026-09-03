@@ -1,0 +1,202 @@
+[
+  {
+    "id": "task_tariff_standard_price",
+    "query": "¿Cuánto cuesta la tarifa Estándar y cuántos minutos incluye?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MI5FQV6JDVIXFB3P7LESAIATTTX",
+      "rm_plans-pricing-features",
+      "rm_price-list-matrix",
+      "rm_tariff-detail"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_vat_peninsular_rate",
+    "query": "Cliente español peninsular: ¿le facturo el 21% o el 19% de IVA?",
+    "expectedDocumentIds": ["sp_01AKSN5MJA45KW3PHOOFDJX2ASAWYV6NUU"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_intracommunity_vat_number",
+    "query": "El cliente me da su NIF-IVA intracomunitario para no pagar IVA, ¿qué hago?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJA45KW3PHOOFDJX2ASAWYV6NUU",
+      "sp_01AKSN5MISJNERVOMCBRDZB6LCAVCLQAG3"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_trial_month_billing",
+    "query": "¿A qué tarifa se factura el consumo del mes de prueba?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPGTFZWYQUZZJFYSYHGI53NRQUU",
+      "sp_01AKSN5MP3PKQFYV5OJRGJ4SGXCJ4B4RT6"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_automatic_tariff_meaning",
+    "query": "¿Qué es la \"Tarifa Automática\" que veo en CMT?",
+    "expectedDocumentIds": ["up_helios_tariff_check", "sp_01AKSN5MKM5SVIU7LIW5BLU7QFX3TNWUME"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_tariff_comparison_24h",
+    "query": "Generar comparativa de tarifas para un cliente con 24h contratada",
+    "expectedDocumentIds": ["up_helios_tariff_check", "sp_01AKSN5MMOW62ZSEKT4VE3CRIT3KVOQMCA"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_callback_on_note_check",
+    "query": "¿Dónde compruebo si un cliente tiene activado el callback-on-note?",
+    "expectedDocumentIds": ["sp_01AKSN5MNQEG4ADOOJWVAYYBRSJ6DULJ64", "rm_notifications-reachability"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_call_scenarios_config",
+    "query": "¿Dónde configuro los escenarios de llamada de un cliente?",
+    "expectedDocumentIds": [
+      "up_agentdesk_secretary_profile_call_scenarios",
+      "up_aurora_call_scenarios"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_why_multiple_subaccounts",
+    "query": "¿Por qué un cliente tiene varias subcuentas?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5ML2WILWSSDESVAJGG4TLSPG3FZR",
+      "rm_account-identity",
+      "up_helios_overview_navigation"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_case_status_waiting_customer",
+    "query": "¿Qué estado de caso uso cuando espero respuesta del cliente?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MPDW3CAB3V6MRG3L7B6C5BGORUU",
+      "sp_01AKSN5MOESRR434IUCFG3D5WRFRYXNVGV"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_case_topic_bank_details",
+    "query": "¿Qué Case Topic/Subtopic uso para un cambio de datos bancarios?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MNGQ5MIX6KUM5GJNKNZXUGO4LMV",
+      "sp_01AKSN5MPDW3CAB3V6MRG3L7B6C5BGORUU",
+      "sp_01AKSN5MOESRR434IUCFG3D5WRFRYXNVGV"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_customer_wants_to_cancel",
+    "query": "El cliente menciona que quiere cancelar, ¿qué hago?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MJMUSXG4MW42NEYQHKOMH56B46A",
+      "sp_01AKSN5MK2Q5RNAUJ5HBEK2HFN2X7TR7ZO",
+      "up_helios_contracts_plan_changes"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_non_user_vs_cancellation",
+    "query": "Diferencia entre baja \"Non User\" y cancelación iniciada por el cliente",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MOESRR434IUCFG3D5WRFRYXNVGV",
+      "sp_01AKSN5MMSUNIMUC7AAZCJWNEG66S3EFJJ",
+      "sp_01AKSN5MKFIWNYKDVN3JG22A3Q5I6ZMUUM"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_when_escalate_team_leader",
+    "query": "¿Cuándo escalo un caso a mi Team Leader?",
+    "expectedDocumentIds": ["sp_01AKSN5MNIOY2KT4JCAFGLLXS23AJYY3WX"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_chs_case_steps",
+    "query": "Me llega un caso CHS, ¿qué pasos sigo?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MIBQJP3W7BJSRBZYB27DOQTGGAB",
+      "sp_01AKSN5MMMMYP7CH4XRJCLB3KWYJJYNORP"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_happiness_check_vs_chs",
+    "query": "¿El happiness check es lo mismo que CHS?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MIBQJP3W7BJSRBZYB27DOQTGGAB",
+      "sp_01AKSN5MMMMYP7CH4XRJCLB3KWYJJYNORP",
+      "sp_01AKSN5MLANWM72OVSYFBJFETC3BTVXK67",
+      "sp_01AKSN5MKFIWNYKDVN3JG22A3Q5I6ZMUUM"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_employee_no_longer_works",
+    "query": "Varios agentes reportan que un empleado ya no trabaja allí, ¿cuándo escalo?",
+    "expectedDocumentIds": ["rm_agents-employees", "sp_01AKSN5MNIOY2KT4JCAFGLLXS23AJYY3WX"],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_satisfaction_check_template",
+    "query": "¿Qué plantilla de \"chequeo de satisfacción\" uso y en qué se diferencian?",
+    "expectedDocumentIds": [
+      "sp_01AKSN5MK4YQBT4JJKLZHIYUQ4QPURBL5N",
+      "sp_01AKSN5MIBQJP3W7BJSRBZYB27DOQTGGAB"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "en"
+  },
+  {
+    "id": "task_telenord_forwarding_codes",
+    "query": "Necesito los códigos de desvío de llamadas de TeleNord",
+    "expectedDocumentIds": [
+      "sp_doc_carrier_guide_007",
+      "sp_doc_cf_spain_013",
+      "sp_01AKSN5MLO4G4CBP65FJE3TSJIJMHZXHZ6"
+    ],
+    "source": "real",
+    "locale": "es",
+    "documentLocale": "es"
+  }
+]

@@ -1,0 +1,22 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+db.sqlite
+# WAL sidecars. Enabling journal_mode=WAL (src/db/db.ts) makes SQLite create these
+# next to the database; they are transient state, never source.
+db.sqlite-wal
+db.sqlite-shm
+# Pre-migration snapshots taken before a re-chunk/reindex run (see docs/RAG.md §5.3).
+db.sqlite.bak*
+# Throwaway corpus built by `npm run eval:refresh` to regenerate eval/baseline.json
+# against a clean deterministic seed, without touching the working db.sqlite.
+db.eval.sqlite*
+
+# NOTE: src/data/ holds the ingested SharePoint KB snapshots (real internal
+# corporate content). Now TRACKED so it can't be lost again — the repo is
+# private. Do NOT make this repository public without sanitizing this data.
