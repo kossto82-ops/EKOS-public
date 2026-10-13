@@ -1,5 +1,7 @@
 # EKOS — Enterprise Knowledge Platform
 
+> This is a sanitized public version of EKOS. The original repository contains sensitive information and cannot be made public, so its commit history was not carried over.
+
 **Turn fragmented company knowledge into contextual, evidence-backed answers.**
 
 EKOS is an enterprise knowledge platform designed to help teams find, understand and manage internal knowledge across documents and business information.
